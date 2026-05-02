@@ -707,7 +707,7 @@
     <p class="section-body">Not everything baked here is conventional. This section is for those orders. You know who you are.</p>
     <div class="feral-card">
       <h3>🍆 Custom Shaped Loaf</h3>
-      <span class="price">$18 EACH</span>
+      <span class="price">$20 EACH</span>
       <p>Same wild-fermented sourdough. Very distinctive shape. Order below in the notes — we don't judge. We respect the commitment.</p>
       <a href="#order" class="btn btn-rose">Place a Special Order</a>
     </div>
@@ -993,13 +993,13 @@
             <div class="item-row-header" onclick="toggleItem('feral')">
               <div class="item-row-left">
                 <span>🍆</span>
-                <div><div class="item-row-name">Feral Nunn Loaf</div><div class="item-row-price">$18</div></div>
+                <div><div class="item-row-name">Feral Nunn Loaf</div><div class="item-row-price">$20</div></div>
               </div>
               <div class="item-row-toggle" id="tog-feral">+</div>
             </div>
             <div class="item-builder" id="builder-feral">
               <h4>🍆 Feral Nunn — Custom Shaped Loaf</h4>
-              <p style="font-style:italic;font-size:.88rem;color:var(--muted);margin-bottom:.9rem;">You're committing to the bit. We respect it deeply. $18 each.</p>
+              <p style="font-style:italic;font-size:.88rem;color:var(--muted);margin-bottom:.9rem;">You're committing to the bit. We respect it deeply. $20 each.</p>
               <div class="bqty">
                 <button class="qbtn" onclick="changePackQty('feral',-1)">−</button>
                 <span class="qdisplay" id="feral-qty-d">1</span>
@@ -1393,7 +1393,7 @@ function calcOrder(){
     }
   });
 
-  if(S.feral.on){lines.push({label:`Feral Nunn Loaf ×${S.feral.qty}`,price:18*S.feral.qty});total+=18*S.feral.qty;}
+  if(S.feral.on){lines.push({label:`Feral Nunn Loaf ×${S.feral.qty}`,price:20*S.feral.qty});total+=20*S.feral.qty;}
   if(S.seasonal.on){lines.push({label:'Seasonal Special (price TBD)',price:0});}
 
   return{lines,total,hasBulk};

@@ -233,6 +233,21 @@
       opacity: .45; letter-spacing: .6rem; padding: 1.2rem 0;
     }
 
+
+    /* ── GALLERY CARD LINK ── */
+    a.menu-card{
+      text-decoration: none; display: block; cursor: pointer;
+    }
+    .card-gallery-hint{
+      display: inline-block; margin-top: .9rem;
+      font-family: 'Cinzel', serif; font-size: .58rem; font-weight: 600;
+      letter-spacing: .18em; text-transform: uppercase;
+      color: var(--sage); border-bottom: 1px solid var(--sage);
+      padding-bottom: 1px; transition: color .2s, border-color .2s;
+    }
+    a.menu-card:hover .card-gallery-hint{
+      color: var(--rose); border-color: var(--rose);
+    }
     /* ── MENU ── */
     #offerings{ background: var(--surface2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
     .menu-grid{
@@ -651,12 +666,13 @@
     <h2 class="section-title">From Our Oven<br><em>to Your Table</em></h2>
     <p class="section-body">Every loaf is shaped by hand, leavened wild, and baked with more care than you'd expect from someone who also offers a very specific special-request item.</p>
     <div class="menu-grid">
-      <div class="menu-card">
+      <a class="menu-card menu-card-link" href="gallery.html" title="View our Sourdough Gallery">
         <span class="menu-card-glyph">🍞</span>
         <h3>Sourdough Loaves</h3>
         <div class="price">from $10</div>
         <p>Classic country, simple inclusions (Cinnamon Brown Sugar, Cheddar, Everything Bagel), or premium inclusions (Cheddar Jalapeño, Dark Chocolate Chip).</p>
-      </div>
+        <span class="card-gallery-hint">View Gallery →</span>
+      </a>
       <div class="menu-card">
         <span class="menu-card-glyph">🍪</span>
         <h3>Chocolate Chip Cookies</h3>

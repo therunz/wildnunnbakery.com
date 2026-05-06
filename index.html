@@ -295,6 +295,20 @@
     .feral-card .price{ font-family: 'Cinzel', serif; font-size: .7rem; font-weight: 600; letter-spacing: .12em; color: var(--bark); margin: .4rem 0 1rem; display: block; }
     .feral-card p{ font-style: italic; font-size: .95rem; color: var(--bark); margin-bottom: 1.8rem; line-height: 1.6; }
 
+
+    .feral-gallery-wrap{
+      margin-top: 1.5rem;
+      border-top: 1px dashed var(--rose);
+      padding-top: 1.2rem;
+    }
+    .feral-gallery-btn{
+      background: var(--plum); border-color: var(--plum);
+      transition: background .2s, transform .15s;
+    }
+    .feral-gallery-btn:hover{ background: var(--rose); border-color: var(--rose); }
+    .feral-gallery-sub{
+      margin-top: .6rem; font-style: italic; font-size: .85rem; color: var(--rose);
+    }
     /* ── ABOUT ── */
     #about{ background: var(--olivewood); border-top: 1px solid var(--bark); border-bottom: 1px solid var(--bark); }
     #about .section-title{ color: var(--cream); }
@@ -670,7 +684,7 @@
         <span class="menu-card-glyph">🍞</span>
         <h3>Sourdough Loaves</h3>
         <div class="price">from $10</div>
-        <p>Classic, simple inclusions (Cinnamon Brown Sugar, Cheddar, Everything Bagel), or premium inclusions (Cheddar Jalapeño, Dark Chocolate Chip).</p>
+        <p>Classic, simple inclusions (Cinnamon Brown Sugar, Cheddar, Everything Bagel), or premium inclusions (Cheddar Jalapeño, Dark Chocolate Croissant Loaf).</p>
         <span class="card-gallery-hint">View Gallery →</span>
       </a>
       <div class="menu-card">
@@ -727,7 +741,27 @@
       <span class="price">$20 EACH</span>
       <p>Same wild-fermented sourdough. Very distinctive shape. Order below in the notes — we don't judge. We respect the commitment.</p>
       <a href="#order" class="btn btn-rose">Place a Special Order</a>
+      <div class="feral-gallery-wrap">
+        <button class="btn feral-gallery-btn" id="feralBtn" onclick="feralConfirm()">See the Feral Loaf</button>
+        <p class="feral-gallery-sub" id="feralSub" style="display:none;">This is a judgment-free zone. Probably.</p>
+      </div>
     </div>
+
+    <script>
+    function feralConfirm() {
+      var btn = document.getElementById('feralBtn');
+      var sub = document.getElementById('feralSub');
+      if (btn.dataset.confirmed === 'true') {
+        window.location.href = 'feral.html';
+      } else {
+        btn.dataset.confirmed = 'true';
+        btn.textContent = 'YES, show me 👀';
+        btn.style.background = 'var(--rose)';
+        btn.style.borderColor = 'var(--rose)';
+        sub.style.display = 'block';
+      }
+    }
+    </script>
   </div>
 </section>
 
@@ -1266,7 +1300,7 @@ const S = {
 
 const LP={plain:10,simple:12,premium:14};
 const SF=['Cinnamon Brown Sugar','Cheddar','Everything Bagel'];
-const PF=['Cheddar Jalapeño','Dark Chocolate Chip'];
+const PF=['Cheddar Jalapeño','Dark Chocolate Croissant Loaf'];
 
 function toggleItem(k){
   S[k].on=!S[k].on;

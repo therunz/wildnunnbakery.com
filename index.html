@@ -1051,6 +1051,17 @@
             <div class="item-builder" id="builder-feral">
               <h4>🍆 Feral Nunn — Custom Shaped Loaf</h4>
               <p style="font-style:italic;font-size:.88rem;color:var(--muted);margin-bottom:.9rem;">You're committing to the bit. We respect it deeply. $20 each.</p>
+              <div class="inc-label" style="margin-bottom:.5rem;">Style</div>
+              <div class="pill-group" style="margin-bottom:1rem;">
+                <label class="rpill">
+                  <input type="radio" name="feral-style" value="seeds" checked onchange="S.feral.style=this.value">
+                  🌱 All Natural (With Seeds)
+                </label>
+                <label class="rpill">
+                  <input type="radio" name="feral-style" value="bare" onchange="S.feral.style=this.value">
+                  😏 Bare (No Seeds)
+                </label>
+              </div>
               <div class="bqty">
                 <button class="qbtn" onclick="changePackQty('feral',-1)">−</button>
                 <span class="qdisplay" id="feral-qty-d">1</span>
@@ -1090,6 +1101,11 @@
             <input type="checkbox" id="allergy-dairy"/>
             <div class="allergy-dot"></div>
             <span>🥛 Dairy</span>
+          </label>
+          <label class="allergy-pill">
+            <input type="checkbox" id="allergy-seeds"/>
+            <div class="allergy-dot"></div>
+            <span>🌱 Seeds</span>
           </label>
         </div>
 
@@ -1294,7 +1310,7 @@ const S = {
   bagels:   {on:false,qty:1,size:'half',bulk:false},
   muffins:  {on:false,qty:1,size:'half',bulk:false},
   seasonal: {on:false},
-  feral:    {on:false,qty:1},
+  feral:    {on:false,qty:1,style:'seeds'},
   pay:null
 };
 
@@ -1444,7 +1460,7 @@ function calcOrder(){
     }
   });
 
-  if(S.feral.on){lines.push({label:`Feral Nunn Loaf ×${S.feral.qty}`,price:20*S.feral.qty});total+=20*S.feral.qty;}
+  if(S.feral.on){const feralStyle=S.feral.style==='bare'?'Bare (No Seeds)':'All Natural (With Seeds)';lines.push({label:`Feral Nunn Loaf ×${S.feral.qty} — ${feralStyle}`,price:20*S.feral.qty});total+=20*S.feral.qty;}
   if(S.seasonal.on){lines.push({label:'Seasonal Special (price TBD)',price:0});}
 
   return{lines,total,hasBulk};
@@ -1483,6 +1499,7 @@ function getAllergies(){
   if(document.getElementById('allergy-nuts').checked) a.push('Tree Nuts / Peanuts');
   if(document.getElementById('allergy-eggs').checked) a.push('Eggs');
   if(document.getElementById('allergy-dairy').checked) a.push('Dairy');
+  if(document.getElementById('allergy-seeds').checked) a.push('Seeds');
   return a;
 }
 

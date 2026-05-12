@@ -719,6 +719,12 @@
         <p>All the nooks, all the crannies, none of the mass-production sadness.</p>
       </div>
       <div class="menu-card">
+        <span class="menu-card-glyph">🥖</span>
+        <h3>Dinner Rolls</h3>
+        <div class="price">8 for $8</div>
+        <p>Soft, golden sourdough dinner rolls — wild-fermented and baked to pillowy perfection. The kind that disappear before the main course.</p>
+      </div>
+            <div class="menu-card">
         <span class="menu-card-glyph">🌿</span>
         <h3>Seasonal Specials</h3>
         <div class="price">Varies by season</div>
@@ -1020,6 +1026,44 @@
             </div>
           </div>
 
+
+          <!-- DINNER ROLLS -->
+          <div class="item-row" id="row-drolls">
+            <div class="item-row-header" onclick="toggleItem('drolls')">
+              <div class="item-row-left">
+                <span>🥖</span>
+                <div><div class="item-row-name">Dinner Rolls</div><div class="item-row-price">8 rolls — $8</div></div>
+              </div>
+              <div class="item-row-toggle" id="tog-drolls">+</div>
+            </div>
+            <div class="item-builder" id="builder-drolls">
+              <h4>🥖 Dinner Rolls</h4>
+              <div class="inc-label" style="margin-bottom:.5rem;">Seed Preference</div>
+              <div class="pill-group" style="margin-bottom:1rem;">
+                <label class="rpill">
+                  <input type="radio" name="drolls-seeds" value="seeds" checked onchange="S.drolls.seeds=this.value">
+                  🌱 With Seeds
+                </label>
+                <label class="rpill">
+                  <input type="radio" name="drolls-seeds" value="noseeds" onchange="S.drolls.seeds=this.value">
+                  🍞 No Seeds
+                </label>
+              </div>
+              <div class="bqty">
+                <button class="qbtn" onclick="changePackQty('drolls',-1)">−</button>
+                <span class="qdisplay" id="drolls-qty-d">1</span>
+                <button class="qbtn" onclick="changePackQty('drolls',1)">+</button>
+                <span class="qlabel">packs of 8 @ $8 each (max 5)</span>
+                <button class="moar-btn" id="drolls-moar" onclick="triggerBulk('drolls')">✦ Need more?</button>
+              </div>
+              <div class="bulk-panel" id="bulk-drolls">
+                <div class="bulk-title">Large Order — Subject to Confirmation</div>
+                <p>How many packs total? We'll confirm before finalizing.</p>
+                <input type="number" id="bulk-drolls-qty" min="6" max="50" placeholder="e.g. 8" oninput="updateSummary()"/>
+              </div>
+            </div>
+          </div>
+
           <!-- SEASONAL -->
           <div class="item-row" id="row-seasonal">
             <div class="item-row-header" onclick="toggleItem('seasonal')">
@@ -1311,6 +1355,7 @@ const S = {
   muffins:  {on:false,qty:1,size:'half',bulk:false},
   seasonal: {on:false},
   feral:    {on:false,qty:1,style:'seeds'},
+  drolls:   {on:false,qty:1,seeds:'seeds',bulk:false},
   pay:null
 };
 
@@ -1336,6 +1381,7 @@ function toggleItem(k){
     if(k==='bagels')  renderPacks('bagels', [{l:'Single — $3',v:'single',p:3},{l:'Half Dozen — $12',v:'half',p:12}]);
     if(k==='muffins') renderPacks('muffins',[{l:'Single — $2',v:'single',p:2},{l:'Half Dozen — $8',v:'half',p:8}]);
     if(k==='seasonal') showCustomNote();
+    if(k==='drolls') {};
   }
   updateSummary();
 }
@@ -1460,6 +1506,15 @@ function calcOrder(){
     }
   });
 
+  if(S.drolls.on){
+    if(S.drolls.bulk){
+      const bq=parseInt(document.getElementById('bulk-drolls-qty').value)||0;
+      if(bq>0){lines.push({label:`Dinner Rolls ×${bq} packs (LARGE — subject to confirmation)`,price:0,bulk:true});hasBulk=true;}
+    } else {
+      const seedLabel=S.drolls.seeds==='seeds'?'With Seeds':'No Seeds';
+      lines.push({label:`Dinner Rolls (${seedLabel}) ×${S.drolls.qty} packs of 8`,price:8*S.drolls.qty});total+=8*S.drolls.qty;
+    }
+  }
   if(S.feral.on){const feralStyle=S.feral.style==='bare'?'Bare (No Seeds)':'All Natural (With Seeds)';lines.push({label:`Feral Nunn Loaf ×${S.feral.qty} — ${feralStyle}`,price:20*S.feral.qty});total+=20*S.feral.qty;}
   if(S.seasonal.on){lines.push({label:'Seasonal Special (price TBD)',price:0});}
 
@@ -1530,6 +1585,7 @@ async function submitOrder(){
     'Payment':S.pay||'Not specified',
     '⚠️ Allergy Flags':allergies.length?allergies.join(', '):'None declared',
     'Large Order':hasBulk?'YES — requires confirmation':'No',
+    'Dinner Rolls Seeds':S.drolls.on?(S.drolls.seeds==='seeds'?'With Seeds':'No Seeds'):'N/A',
     'Seasonal Note':seasonal||'N/A',
     'Additional Notes':note||'None',
   };

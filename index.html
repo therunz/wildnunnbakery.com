@@ -797,7 +797,7 @@
 
 <!-- BANNER -->
 <div class="banner">
-  <div class="banner-text" id="banner-deadline">✦ &nbsp; Orders Close Thursday at 8pm &nbsp;·&nbsp; Pickup Sunday Noon–2pm &nbsp; ✦</div>
+  <div class="banner-text" id="banner-deadline">✦ &nbsp; Orders Close Thursday at 8pm &nbsp;·&nbsp; Pickup or Delivery Sunday Noon–2pm &nbsp; ✦</div>
   <div class="banner-pickup" id="banner-pickup-line"></div>
   <div class="banner-sub">Indiana Cottage Food</div>
 </div>
@@ -937,7 +937,7 @@
 
     <div class="order-card">
       <div class="order-card-header">
-        <div class="pickup-display">Next Pickup</div>
+        <div class="pickup-display" id="header-pickup-label">Next Pickup or Delivery</div>
         <div class="pickup-date" id="header-pickup-date">Loading...</div>
         <div class="deadline-note" id="header-deadline-note">Loading...</div>
       </div>
@@ -1490,7 +1490,7 @@ let pickupShortStr = formatShort(pickupSunday);
 function updateDates() {
   // Banner
   const bannerPick = document.getElementById('banner-pickup-line');
-  if (bannerPick) bannerPick.textContent = `Next pickup: ${pickupDateStr} · Noon–2pm`;
+  if (bannerPick) bannerPick.textContent = `Next pickup or delivery: ${pickupDateStr} · Noon–2pm`;
 
   // Order card header
   const hDate = document.getElementById('header-pickup-date');
@@ -1500,12 +1500,12 @@ function updateDates() {
   if (hNote) {
     const est = new Date(pickupSunday);
     est.setDate(est.getDate() - 3);
-    hNote.textContent = `Order by ${formatDate(est)} at 8pm EST to make this pickup`;
+    hNote.textContent = `Order by ${formatDate(est)} at 8pm EST to make this pickup or delivery`;
   }
 
-  // Deadline bar — just pickup date
+  // Deadline bar
   const dbText = document.getElementById('deadline-bar-text');
-  if (dbText) dbText.textContent = `Pickup ${pickupDateStr} · Noon to 2pm`;
+  if (dbText) dbText.textContent = `Pickup or Delivery ${pickupDateStr} · Noon to 2pm`;
 }
 updateDates();
 

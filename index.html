@@ -949,7 +949,7 @@
           <input type="text" id="f-name" placeholder="Your name"/>
         </div>
         <div class="form-row">
-          <label>Phone</label>
+          <label>Phone *</label>
           <input type="tel" id="f-phone" placeholder="(555) 555-5555"/>
         </div>
         <div class="form-row opt">
@@ -2019,10 +2019,11 @@ function getAllergies(){
 async function submitOrder(){
   const name=document.getElementById('f-name').value.trim();
   if(!name){alert('Please enter your name before submitting.');return;}
+  const phone=document.getElementById('f-phone').value.trim();
+  if(!phone){alert('Please enter a phone number so we can reach you.');return;}
   const{lines,total,hasBulk}=calcOrder();
   if(!lines.length){alert('Please select at least one item.');return;}
 
-  const phone=document.getElementById('f-phone').value;
   const email=document.getElementById('f-email').value;
   const note=document.getElementById('f-note')?document.getElementById('f-note').value:'';
   const seasonal=document.getElementById('seasonal-note')?document.getElementById('seasonal-note').value:'';
@@ -2036,6 +2037,7 @@ async function submitOrder(){
 
   const payload={
     _subject:`New Pre-Order: ${name} — ${pickupShortStr} — ${totalText}`,
+    _replyto: email || 'wildnunnbakery@gmail.com',
     'Customer Name':name,
     'Phone':phone||'Not provided',
     'Email':email||'Not provided',
@@ -2072,7 +2074,8 @@ async function submitOrder(){
       status.innerHTML=`✦ Your order for ${S.delivery.confirmed ? 'delivery' : 'pickup'} on <strong>${pickupDateStr}</strong> has been sent to Sarah! She'll be in touch to confirm. Orders close Thursday at 8pm EST.`;
       status.scrollIntoView({behavior:'smooth',block:'center'});
     } else {
-      throw new Error(data.error||'Submission failed');
+      console.error('Formspree error:', res.status, JSON.stringify(data));
+      throw new Error(data.error||JSON.stringify(data)||'Submission failed');
     }
   } catch(err){
     btn.disabled=false;btn.innerHTML='Submit Pre-Order';

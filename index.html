@@ -2035,16 +2035,16 @@ async function submitOrder(){
   const totalText=hasBulk?`$${total+deliveryTotal} + large order items (TBC)`:`$${total+deliveryTotal}`;
 
   const payload={
-    _subject:`🍞 Pre-Order: ${name} — Pickup ${pickupShortStr} — ${totalText}`,
+    _subject:`New Pre-Order: ${name} — ${pickupShortStr} — ${totalText}`,
     'Customer Name':name,
     'Phone':phone||'Not provided',
     'Email':email||'Not provided',
-    '📅 Pickup Date':pickupDateStr+' · Noon to 2pm',
+    'Pickup or Delivery Date':pickupDateStr+' · Noon to 2pm',
     'Order':orderText,
     'Estimated Total':totalText,
-    'Payment':S.pay||'Not specified',
-    '🚗 Delivery':S.delivery.confirmed?`YES — $${S.delivery.fee} flat rate — ${S.delivery.address}`:'No (pickup)',
-    '⚠️ Allergy Flags':allergies.length?allergies.join(', '):'None declared',
+    'Payment Method':S.pay||'Not specified',
+    'Delivery':S.delivery.confirmed?`YES — $${S.delivery.fee} flat rate — ${S.delivery.address}`:'No (pickup)',
+    'Allergy Flags':allergies.length?allergies.join(', '):'None declared',
     'Large Order':hasBulk?'YES — requires confirmation':'No',
     'Dinner Rolls Seeds':S.drolls.on?(S.drolls.seeds==='seeds'?'With Seeds':'No Seeds'):'N/A',
     'Seasonal Note':seasonal||'N/A',
@@ -2069,7 +2069,7 @@ async function submitOrder(){
       btn.innerHTML='✦ Order Sent!';
       btn.style.background='var(--sage)';btn.style.borderColor='var(--sage)';
       status.style.display='block';status.className='ok';
-      status.innerHTML=`✦ Your order for pickup on <strong>${pickupDateStr}</strong> has been sent to Sarah! She'll be in touch to confirm. Orders close Thursday at 8pm EST.`;
+      status.innerHTML=`✦ Your order for ${S.delivery.confirmed ? 'delivery' : 'pickup'} on <strong>${pickupDateStr}</strong> has been sent to Sarah! She'll be in touch to confirm. Orders close Thursday at 8pm EST.`;
       status.scrollIntoView({behavior:'smooth',block:'center'});
     } else {
       throw new Error(data.error||'Submission failed');

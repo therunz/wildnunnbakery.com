@@ -6,6 +6,7 @@
   <title>The Wild Nunn Bakery</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Pinyon+Script&display=swap" rel="stylesheet"/>
+
   <style>
     :root {
       /* Gothic Cottage Core - deep forest / moonlit parchment */
@@ -613,6 +614,123 @@
       text-transform: uppercase; color: rgba(176,112,128,.5);
     }
 
+    /* ── DELIVERY ── */
+    .delivery-section{
+      margin: 2rem 0 0;
+      border: 1.5px solid var(--border);
+      background: var(--surface);
+      position: relative;
+      transition: border-color .25s;
+    }
+    .delivery-section.active-delivery{ border-color: var(--sage); }
+
+    .delivery-toggle-header{
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.1rem 1.4rem; cursor: default;
+    }
+    .delivery-toggle-header.clickable{ cursor: pointer; }
+    .delivery-toggle-header.clickable:hover .delivery-toggle-label{ color: var(--sage); }
+
+    .delivery-toggle-left{ display: flex; align-items: center; gap: .85rem; }
+    .delivery-icon{ font-size: 1.3rem; }
+    .delivery-toggle-label{
+      font-family: 'IM Fell English', serif; font-style: italic;
+      font-size: 1.05rem; color: var(--olivewood); transition: color .2s;
+    }
+    .delivery-toggle-sub{
+      font-style: italic; font-size: .78rem; color: var(--muted); margin-top: .1rem;
+    }
+    .delivery-lock-note{
+      font-family: 'Cinzel', serif; font-size: .58rem; font-weight: 600;
+      letter-spacing: .14em; text-transform: uppercase;
+      color: var(--sand); background: var(--bark);
+      padding: .3rem .75rem; white-space: nowrap;
+      opacity: .75;
+    }
+    .delivery-toggle-pill{
+      display: flex; gap: .5rem;
+    }
+    .dpill{
+      font-family: 'Cinzel', serif; font-size: .6rem; font-weight: 600;
+      letter-spacing: .12em; text-transform: uppercase;
+      padding: .5rem 1.1rem; border: 1.5px solid var(--border);
+      background: var(--cream); color: var(--muted);
+      cursor: pointer; transition: all .18s;
+    }
+    .dpill:hover:not(:disabled){ border-color: var(--sage); color: var(--sage); }
+    .dpill.sel-yes{ background: var(--sage); border-color: var(--sage); color: var(--cream); }
+    .dpill.sel-no{  background: var(--bark); border-color: var(--bark); color: var(--cream); }
+    .dpill:disabled{ opacity: .4; cursor: not-allowed; }
+
+    /* Address panel */
+    .delivery-body{
+      padding: 0 1.4rem 1.4rem; display: none;
+    }
+    .delivery-body.open{ display: block; }
+
+    .delivery-address-wrap{ position: relative; margin-top: .5rem; }
+    #delivery-address-input{
+      width: 100%; padding: .85rem 1rem;
+      background: var(--cream); border: 1.5px solid var(--border);
+      font-family: 'Crimson Pro', serif; font-size: 1rem; color: var(--ink);
+      outline: none; transition: border-color .2s;
+    }
+    #delivery-address-input:focus{ border-color: var(--sage); }
+    #delivery-address-input::placeholder{ color: var(--sand); font-style: italic; }
+
+    /* Google autocomplete dropdown override */
+    .pac-container{
+      font-family: 'Crimson Pro', serif !important;
+      border: 1px solid var(--border) !important;
+      box-shadow: 0 4px 20px var(--shadow) !important;
+      border-radius: 0 !important;
+      background: var(--cream) !important;
+    }
+    .pac-item{ font-size: .92rem !important; padding: .5rem .9rem !important; cursor: pointer; }
+    .pac-item:hover{ background: var(--warm-mid) !important; }
+    .pac-item-query{ font-family: 'IM Fell English', serif !important; color: var(--olivewood) !important; }
+
+    .delivery-result{
+      margin-top: 1rem; padding: 1rem 1.2rem;
+      border-left: 3px solid var(--olive);
+      background: var(--surface2); display: none;
+    }
+    .delivery-result.show{ display: block; }
+    .delivery-result.out-of-range{ border-left-color: var(--rose); background: var(--rose-pale); }
+    .delivery-result.ky-block{ border-left-color: var(--rose); background: var(--rose-pale); }
+
+    .delivery-result-title{
+      font-family: 'IM Fell English', serif; font-style: italic;
+      font-size: 1.05rem; color: var(--olivewood); margin-bottom: .35rem;
+    }
+    .delivery-result.out-of-range .delivery-result-title,
+    .delivery-result.ky-block .delivery-result-title{ color: var(--rose); }
+
+    .delivery-result p{ font-style: italic; font-size: .88rem; color: var(--muted); line-height: 1.55; margin-bottom: .5rem; }
+    .delivery-result p:last-child{ margin-bottom: 0; }
+
+    .delivery-add-btn{
+      margin-top: .9rem;
+      font-family: 'Cinzel', serif; font-size: .6rem; font-weight: 600;
+      letter-spacing: .14em; text-transform: uppercase;
+      padding: .65rem 1.6rem;
+      background: var(--sage); border: 1.5px solid var(--sage); color: var(--cream);
+      cursor: pointer; transition: all .18s; display: inline-block;
+    }
+    .delivery-add-btn:hover{ background: var(--olivewood); border-color: var(--olive); }
+    .delivery-added-badge{
+      display: inline-flex; align-items: center; gap: .5rem;
+      font-family: 'Cinzel', serif; font-size: .6rem; font-weight: 600;
+      letter-spacing: .14em; text-transform: uppercase;
+      color: var(--sage); margin-top: .9rem;
+    }
+
+    .delivery-checking{
+      margin-top: .8rem; font-style: italic; font-size: .88rem; color: var(--muted);
+      display: none;
+    }
+    .delivery-checking.show{ display: block; }
+
     /* ── ANIMATIONS ── */
     @keyframes fadeUp{
       from{ opacity: 0; transform: translateY(22px); }
@@ -1162,6 +1280,41 @@
           </div>
         </div>
 
+        <!-- DELIVERY OPTION -->
+        <div class="fsec">Delivery</div>
+        <div class="delivery-section" id="delivery-section">
+          <div class="delivery-toggle-header" id="delivery-toggle-header">
+            <div class="delivery-toggle-left">
+              <span class="delivery-icon">🚗</span>
+              <div>
+                <div class="delivery-toggle-label">Would you like delivery?</div>
+                <div class="delivery-toggle-sub" id="delivery-sub-note">Add $20 or more to your order to unlock local delivery</div>
+              </div>
+            </div>
+            <div id="delivery-lock-badge" class="delivery-lock-note">$20 min</div>
+            <div class="delivery-toggle-pill" id="delivery-pills" style="display:none;">
+              <button class="dpill" id="dpill-yes" onclick="selectDelivery('yes')">Yes</button>
+              <button class="dpill sel-no" id="dpill-no" onclick="selectDelivery('no')">No</button>
+            </div>
+          </div>
+
+          <div class="delivery-body" id="delivery-body">
+            <p style="font-style:italic;font-size:.88rem;color:var(--muted);margin-bottom:.75rem;">
+              We deliver within <strong>10 miles of Charlestown, IN</strong> — Indiana addresses only (cottage food law). Flat rate of <strong>$8</strong>.
+            </p>
+            <div class="delivery-address-wrap">
+              <input type="text" id="delivery-address-input" placeholder="Start typing your address…" autocomplete="off"/>
+              <button class="delivery-add-btn" onclick="manualCheckAddress()" style="margin-top:.6rem;display:block;width:100%;">Check Address →</button>
+            </div>
+            <div class="delivery-checking" id="delivery-checking">✦ Checking your address…</div>
+            <div class="delivery-result" id="delivery-result">
+              <div class="delivery-result-title" id="delivery-result-title"></div>
+              <p id="delivery-result-body"></p>
+              <div id="delivery-add-wrap"></div>
+            </div>
+          </div>
+        </div>
+
         <!-- PAYMENT -->
         <div class="fsec">Payment</div>
         <div class="pay-opts">
@@ -1198,8 +1351,8 @@
 
         <!-- FINE PRINT -->
         <div class="fine-print">
-          <p><strong>No shipping.</strong> All products are available for pickup only. We do not ship any baked goods.</p>
-          <p><strong>Indiana pickup only.</strong> Under Indiana's Home-Based Vendor (HBV) guidelines, cottage food products cannot be transported across state lines. If you're coming from Kentucky — welcome, we love you, you're absolutely invited to cross the border and pick up in Indiana. We just can't come to you. You come to us.</p>
+          <p><strong>Pickup or local delivery only.</strong> We do not ship any baked goods.</p>
+          <p><strong>Indiana only — delivery &amp; pickup.</strong> Under Indiana's Home-Based Vendor (HBV) guidelines, cottage food products cannot be transported across state lines. Delivery is available within 10 miles of Charlestown, IN for a flat $8 fee. If you're coming from Kentucky — welcome, we love you, you're absolutely invited to cross the border and pick up in Indiana. We just can't come to you.</p>
           <p>All products are made in a home kitchen that handles wheat, dairy, eggs, and tree nuts.</p>
         </div>
 
@@ -1356,7 +1509,8 @@ const S = {
   seasonal: {on:false},
   feral:    {on:false,qty:1,style:'seeds'},
   drolls:   {on:false,qty:1,seeds:'seeds',bulk:false},
-  pay:null
+  pay:null,
+  delivery: {selected:false, confirmed:false, address:'', fee:0}
 };
 
 const LP={plain:10,simple:12,premium:14};
@@ -1524,12 +1678,22 @@ function calcOrder(){
 function updateSummary(){
   const{lines,total,hasBulk}=calcOrder();
   const el=document.getElementById('order-summary');
-  if(!lines.length){el.classList.remove('vis');return;}
+  if(!lines.length){el.classList.remove('vis');updateDeliveryUI();return;}
   el.classList.add('vis');
-  document.getElementById('summary-lines').innerHTML=lines.map(l=>
+
+  // Add delivery fee line if confirmed
+  let displayLines = [...lines];
+  let displayTotal = total;
+  if(S.delivery.confirmed && S.delivery.fee > 0){
+    displayLines.push({label:'🚗 Local Delivery', price: S.delivery.fee});
+    displayTotal += S.delivery.fee;
+  }
+
+  document.getElementById('summary-lines').innerHTML=displayLines.map(l=>
     `<div class="sline${l.bulk?' bulk':''}"><span>${l.label}</span><span>${l.price?'$'+l.price:l.bulk?'⚑ TBC':'TBD'}</span></div>`
   ).join('');
-  document.getElementById('summary-total').textContent=hasBulk?'$'+total+' + TBC items':'$'+total;
+  document.getElementById('summary-total').textContent=hasBulk?'$'+displayTotal+' + TBC items':'$'+displayTotal;
+  updateDeliveryUI();
 }
 
 function selectPay(t){
@@ -1538,6 +1702,265 @@ function selectPay(t){
   document.getElementById('pay-pickup').classList.toggle('sel',t==='pickup');
   document.getElementById('venmo-panel').classList.toggle('vis',t==='venmo');
   document.getElementById('pickup-panel').classList.toggle('vis',t==='pickup');
+}
+
+// ─────────────────────────────────────────
+// DELIVERY LOGIC
+// ─────────────────────────────────────────
+// Charlestown, IN center coordinates
+const CHARLESTOWN_LAT = 38.4423;
+const CHARLESTOWN_LNG = -85.6710;
+const DELIVERY_RADIUS_MILES = 10;
+const DELIVERY_FEE = 8;
+const DELIVERY_MIN = 20;
+
+// ── Replace this with your real Google Maps API key when ready ──
+const GOOGLE_MAPS_KEY = 'AIzaSyBkGYCs7ZZdw9wFTlQtSlqzuJfVTq40nhs';
+
+let deliveryAutocomplete = null;
+
+// Safely load Google Maps only when a real key is provided
+function loadGoogleMaps() {
+  if (!GOOGLE_MAPS_KEY) return; // no key = skip, manual input works fine
+  if (window.google && window.google.maps) { initDeliveryAutocomplete(); return; }
+  const s = document.createElement('script');
+  s.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_KEY}&libraries=places,geometry&callback=initDeliveryAutocomplete`;
+  s.async = true; s.defer = true;
+  s.onerror = () => console.warn('Google Maps failed to load — address field will work as plain text.');
+  document.head.appendChild(s);
+}
+
+// Called by Google Maps API once loaded
+function initDeliveryAutocomplete() {
+  const input = document.getElementById('delivery-address-input');
+  if (!input || !window.google) return;
+
+  deliveryAutocomplete = new google.maps.places.Autocomplete(input, {
+    types: ['address'],
+    componentRestrictions: { country: 'us' },
+    fields: ['formatted_address','geometry','address_components']
+  });
+
+  deliveryAutocomplete.addListener('place_changed', function() {
+    const place = deliveryAutocomplete.getPlace();
+    if (!place.geometry) {
+      showDeliveryResult('error', 'Address not found', 'Please select an address from the dropdown suggestions.');
+      return;
+    }
+    validateDeliveryAddress(place);
+  });
+}
+
+// Manual geocode fallback (used when Maps JS isn't loaded)
+function manualCheckAddress() {
+  const val = document.getElementById('delivery-address-input').value.trim();
+  if (!val) return;
+  if (!GOOGLE_MAPS_KEY) {
+    // No API key yet — just show a placeholder message so the form still works
+    showDeliveryResult('ok-manual', '📍 Address Received',
+      "We'll verify your address and delivery eligibility when we confirm your order. Note: delivery is only available within 10 miles of Charlestown, IN.",
+      true, true);
+    S.delivery.address = val;
+    return;
+  }
+  // If key exists but autocomplete wasn't used, geocode the typed address
+  document.getElementById('delivery-checking').classList.add('show');
+  fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(val)}&key=${GOOGLE_MAPS_KEY}`)
+    .then(r => r.json())
+    .then(data => {
+      if (!data.results || !data.results.length) {
+        showDeliveryResult('error','Address not found','Please enter a more specific address.');
+        return;
+      }
+      const result = data.results[0];
+      const loc = result.geometry.location;
+      const fakePlace = {
+        formatted_address: result.formatted_address,
+        geometry: { location: { lat: () => loc.lat, lng: () => loc.lng } },
+        address_components: result.address_components
+      };
+      validateDeliveryAddress(fakePlace);
+    })
+    .catch(() => showDeliveryResult('error','Could not verify address','Please try selecting from the autocomplete list.'));
+}
+
+function updateDeliveryUI() {
+  const {total} = calcOrder();
+  const eligible = total >= DELIVERY_MIN;
+
+  const lockBadge = document.getElementById('delivery-lock-badge');
+  const pills = document.getElementById('delivery-pills');
+  const subNote = document.getElementById('delivery-sub-note');
+  const section = document.getElementById('delivery-section');
+  const header = document.getElementById('delivery-toggle-header');
+
+  if (eligible) {
+    lockBadge.style.display = 'none';
+    pills.style.display = 'flex';
+    subNote.textContent = 'Flat $8 delivery fee · Indiana only · within 10 miles of Charlestown';
+    header.classList.add('clickable');
+  } else {
+    lockBadge.style.display = 'block';
+    pills.style.display = 'none';
+    subNote.textContent = 'Add $20 or more to your order to unlock local delivery';
+    header.classList.remove('clickable');
+    // If they had delivery selected, reset it when they drop below min
+    if (S.delivery.selected) {
+      S.delivery.selected = false;
+      S.delivery.confirmed = false;
+      S.delivery.fee = 0;
+      S.delivery.address = '';
+      document.getElementById('dpill-yes').classList.remove('sel-yes');
+      document.getElementById('dpill-no').classList.remove('sel-no');
+      document.getElementById('dpill-no').classList.add('sel-no');
+      document.getElementById('delivery-body').classList.remove('open');
+      section.classList.remove('active-delivery');
+      clearDeliveryResult();
+    }
+  }
+}
+
+function selectDelivery(choice) {
+  const {total} = calcOrder();
+  if (total < DELIVERY_MIN) return;
+
+  const yesBtn = document.getElementById('dpill-yes');
+  const noBtn  = document.getElementById('dpill-no');
+  const body   = document.getElementById('delivery-body');
+  const section = document.getElementById('delivery-section');
+
+  if (choice === 'yes') {
+    S.delivery.selected = true;
+    yesBtn.classList.add('sel-yes');
+    noBtn.classList.remove('sel-no');
+    body.classList.add('open');
+    section.classList.add('active-delivery');
+    loadGoogleMaps();
+    setTimeout(() => document.getElementById('delivery-address-input').focus(), 100);
+  } else {
+    S.delivery.selected = false;
+    S.delivery.confirmed = false;
+    S.delivery.fee = 0;
+    S.delivery.address = '';
+    yesBtn.classList.remove('sel-yes');
+    noBtn.classList.add('sel-no');
+    body.classList.remove('open');
+    section.classList.remove('active-delivery');
+    clearDeliveryResult();
+    document.getElementById('delivery-address-input').value = '';
+    updateSummary();
+  }
+}
+
+function clearDeliveryResult() {
+  const el = document.getElementById('delivery-result');
+  el.className = 'delivery-result';
+  el.style.display = 'none';
+  document.getElementById('delivery-checking').classList.remove('show');
+}
+
+function showDeliveryResult(type, title, body, showAddBtn, isManual) {
+  const el = document.getElementById('delivery-result');
+  el.className = 'delivery-result show';
+  if (type === 'out') el.classList.add('out-of-range');
+  if (type === 'ky')  el.classList.add('ky-block');
+  el.style.display = 'block';
+
+  document.getElementById('delivery-result-title').textContent = title;
+  document.getElementById('delivery-result-body').textContent = body;
+  document.getElementById('delivery-checking').classList.remove('show');
+
+  const addWrap = document.getElementById('delivery-add-wrap');
+  addWrap.innerHTML = '';
+
+  if (showAddBtn) {
+    if (S.delivery.confirmed) {
+      addWrap.innerHTML = `<div class="delivery-added-badge">✦ Delivery Added &nbsp;·&nbsp; +$${DELIVERY_FEE}</div>`;
+    } else {
+      const btn = document.createElement('button');
+      btn.className = 'delivery-add-btn';
+      btn.textContent = `Add Delivery — $${DELIVERY_FEE}`;
+      btn.onclick = function() {
+        S.delivery.confirmed = true;
+        S.delivery.fee = DELIVERY_FEE;
+        addWrap.innerHTML = `<div class="delivery-added-badge">✦ Delivery Added &nbsp;·&nbsp; +$${DELIVERY_FEE}</div>`;
+        updateSummary();
+      };
+      addWrap.appendChild(btn);
+    }
+  }
+}
+
+function getDistanceMiles(lat1, lng1, lat2, lng2) {
+  // Haversine formula
+  const R = 3958.8; // Earth radius miles
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLng = (lng2 - lng1) * Math.PI / 180;
+  const a = Math.sin(dLat/2)*Math.sin(dLat/2) +
+            Math.cos(lat1 * Math.PI/180) * Math.cos(lat2 * Math.PI/180) *
+            Math.sin(dLng/2)*Math.sin(dLng/2);
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+
+function validateDeliveryAddress(place) {
+  document.getElementById('delivery-checking').classList.add('show');
+  clearDeliveryResult();
+
+  // Check state
+  const comps = place.address_components || [];
+  let state = '';
+  for (const c of comps) {
+    if (c.types.includes('administrative_area_level_1')) {
+      state = c.short_name;
+      break;
+    }
+  }
+
+  // Kentucky block
+  if (state === 'KY') {
+    S.delivery.confirmed = false;
+    S.delivery.fee = 0;
+    S.delivery.address = '';
+    showDeliveryResult('ky', '🍃 Across the State Line', 
+      "We love our Kentucky neighbors — truly — but Indiana cottage food law means we cannot deliver across state lines. You're always welcome to cross the bridge and pick up in Indiana on Sunday!",
+      false);
+    updateSummary();
+    return;
+  }
+
+  // Must be Indiana
+  if (state && state !== 'IN') {
+    S.delivery.confirmed = false;
+    S.delivery.fee = 0;
+    S.delivery.address = '';
+    showDeliveryResult('out', '📍 Outside Our Delivery Area',
+      'We currently only deliver within Indiana, within 10 miles of Charlestown. Sorry about that — hope to see you at pickup!',
+      false);
+    updateSummary();
+    return;
+  }
+
+  // Distance check
+  const lat = place.geometry.location.lat();
+  const lng = place.geometry.location.lng();
+  const dist = getDistanceMiles(CHARLESTOWN_LAT, CHARLESTOWN_LNG, lat, lng);
+  const distRounded = Math.round(dist * 10) / 10;
+
+  S.delivery.address = place.formatted_address;
+
+  if (dist <= DELIVERY_RADIUS_MILES) {
+    showDeliveryResult('ok',
+      `✦ You're in our delivery zone! (${distRounded} mi away)`,
+      `Great news — we can deliver to ${place.formatted_address}. Add our flat $8 delivery fee below to include it in your order.`,
+      true);
+  } else {
+    S.delivery.confirmed = false;
+    S.delivery.fee = 0;
+    showDeliveryResult('out', `📍 Just Outside Our Range (${distRounded} mi away)`,
+      `We're sorry — ${place.formatted_address} is ${distRounded} miles from Charlestown, which is just beyond our 10-mile delivery radius. We'd love to see you at Sunday pickup instead!`,
+      false);
+  }
+  updateSummary();
 }
 
 // Allergy checkbox visual
@@ -1572,7 +1995,9 @@ async function submitOrder(){
 
   let orderText=lines.map(l=>`${l.label}: ${l.price?'$'+l.price:l.bulk?'LARGE ORDER (TBC)':'TBD'}`).join('\n');
   if(hasBulk) orderText+='\n\n⚑ LARGE ORDER — requires confirmation before finalizing.';
-  const totalText=hasBulk?`$${total} + large order items (TBC)`:`$${total}`;
+  if(S.delivery.confirmed) orderText+=`\n🚗 Local Delivery: $${S.delivery.fee}`;
+  const deliveryTotal = S.delivery.confirmed ? S.delivery.fee : 0;
+  const totalText=hasBulk?`$${total+deliveryTotal} + large order items (TBC)`:`$${total+deliveryTotal}`;
 
   const payload={
     _subject:`🍞 Pre-Order: ${name} — Pickup ${pickupShortStr} — ${totalText}`,
@@ -1583,6 +2008,7 @@ async function submitOrder(){
     'Order':orderText,
     'Estimated Total':totalText,
     'Payment':S.pay||'Not specified',
+    '🚗 Delivery':S.delivery.confirmed?`YES — $${S.delivery.fee} flat rate — ${S.delivery.address}`:'No (pickup)',
     '⚠️ Allergy Flags':allergies.length?allergies.join(', '):'None declared',
     'Large Order':hasBulk?'YES — requires confirmation':'No',
     'Dinner Rolls Seeds':S.drolls.on?(S.drolls.seeds==='seeds'?'With Seeds':'No Seeds'):'N/A',

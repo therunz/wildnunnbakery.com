@@ -546,6 +546,17 @@
     .paybtn .pname{ font-family: 'IM Fell English', serif; font-style: italic; font-size: 1rem; color: var(--olivewood); }
     .paybtn .psub{ font-style: italic; font-size: .78rem; color: var(--muted); margin-top: .1rem; }
 
+    .paybtn:disabled{
+      opacity: .38; cursor: not-allowed; pointer-events: none;
+    }
+    .delivery-prepay-notice{
+      font-style: italic; font-size: .9rem;
+      background: var(--warm-mid); border: 1px solid var(--border);
+      border-left: 3px solid var(--rose);
+      padding: .8rem 1.1rem; margin-bottom: .8rem; color: var(--bark);
+    }
+    .delivery-prepay-notice strong{ font-style: normal; color: var(--rose); }
+
     .venmo-panel{ display: none; }
     .venmo-panel.vis{
       display: flex; gap: 1.4rem; align-items: flex-start; flex-wrap: wrap;
@@ -1317,6 +1328,9 @@
 
         <!-- PAYMENT -->
         <div class="fsec">Payment</div>
+        <div class="delivery-prepay-notice" id="delivery-prepay-notice" style="display:none;">
+          🚗 <strong>Delivery requires pre-payment.</strong> Please pay via Venmo before your order is delivered.
+        </div>
         <div class="pay-opts">
           <button class="paybtn" onclick="selectPay('venmo')" id="pay-venmo">
             <span class="picon">💙</span>
@@ -1697,11 +1711,29 @@ function updateSummary(){
 }
 
 function selectPay(t){
+  // Block pickup selection if delivery is confirmed
+  if(t === 'pickup' && S.delivery.confirmed) return;
   S.pay=t;
   document.getElementById('pay-venmo').classList.toggle('sel',t==='venmo');
   document.getElementById('pay-pickup').classList.toggle('sel',t==='pickup');
   document.getElementById('venmo-panel').classList.toggle('vis',t==='venmo');
   document.getElementById('pickup-panel').classList.toggle('vis',t==='pickup');
+}
+
+function updatePaymentForDelivery(){
+  const pickupBtn = document.getElementById('pay-pickup');
+  const notice = document.getElementById('delivery-prepay-notice');
+  if(S.delivery.confirmed){
+    pickupBtn.disabled = true;
+    notice.style.display = 'block';
+    // If they had pickup selected, switch them to venmo automatically
+    if(S.pay === 'pickup'){
+      selectPay('venmo');
+    }
+  } else {
+    pickupBtn.disabled = false;
+    notice.style.display = 'none';
+  }
 }
 
 // ─────────────────────────────────────────
@@ -1816,6 +1848,7 @@ function updateDeliveryUI() {
       document.getElementById('delivery-body').classList.remove('open');
       section.classList.remove('active-delivery');
       clearDeliveryResult();
+      updatePaymentForDelivery();
     }
   }
 }
@@ -1848,6 +1881,7 @@ function selectDelivery(choice) {
     section.classList.remove('active-delivery');
     clearDeliveryResult();
     document.getElementById('delivery-address-input').value = '';
+    updatePaymentForDelivery();
     updateSummary();
   }
 }
@@ -1884,6 +1918,7 @@ function showDeliveryResult(type, title, body, showAddBtn, isManual) {
         S.delivery.confirmed = true;
         S.delivery.fee = DELIVERY_FEE;
         addWrap.innerHTML = `<div class="delivery-added-badge">✦ Delivery Added &nbsp;·&nbsp; +$${DELIVERY_FEE}</div>`;
+        updatePaymentForDelivery();
         updateSummary();
       };
       addWrap.appendChild(btn);

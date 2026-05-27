@@ -996,12 +996,23 @@
             <div class="item-row-header" onclick="toggleItem('cookies')">
               <div class="item-row-left">
                 <span>🍪</span>
-                <div><div class="item-row-name">Chocolate Chip Cookies</div><div class="item-row-price">$3 each · $12 half dozen</div></div>
+                <div><div class="item-row-name">Cookies</div><div class="item-row-price">$3 each · $12 half dozen</div></div>
               </div>
               <div class="item-row-toggle" id="tog-cookies">+</div>
             </div>
             <div class="item-builder" id="builder-cookies">
-              <h4>🍪 Sourdough Chocolate Chip Cookies</h4>
+              <h4>🍪 Sourdough Cookies</h4>
+              <div class="inc-label" style="margin-bottom:.5rem;">Flavor</div>
+              <div class="pill-group" style="margin-bottom:1rem;">
+                <label class="rpill">
+                  <input type="radio" name="cookie-flavor" value="choc" checked onchange="S.cookies.flavor=this.value;updateSummary()">
+                  🍫 Chocolate Chip
+                </label>
+                <label class="rpill">
+                  <input type="radio" name="cookie-flavor" value="pb" onchange="S.cookies.flavor=this.value;updateSummary()">
+                  🥜 Peanut Butter
+                </label>
+              </div>
               <div class="bqty">
                 <button class="qbtn" onclick="changePackQty('cookies',-1)">−</button>
                 <span class="qdisplay" id="cookies-qty-d">1</span>
@@ -1516,7 +1527,7 @@ updateDates();
 // ─────────────────────────────────────────
 const S = {
   loaf:     {on:false,qty:1,entries:[],bulk:false},
-  cookies:  {on:false,qty:1,size:'half',bulk:false},
+  cookies:  {on:false,qty:1,size:'half',bulk:false,flavor:'choc'},
   hotdog:   {on:false,qty:1,size:'4pk',bulk:false},
   burger:   {on:false,qty:1,size:'4pk',bulk:false},
   tortillas:{on:false,qty:1,bulk:false},
@@ -1638,8 +1649,8 @@ function calcOrder(){
       const bq=parseInt(document.getElementById('bulk-cookies-qty').value)||0;
       if(bq>0){lines.push({label:`Cookies ×${bq} (LARGE — subject to confirmation)`,price:0,bulk:true});hasBulk=true;}
     } else {
-      const p=cookieP[S.cookies.size]||12;const sz=S.cookies.size==='single'?'Single':'Half Dozen';
-      lines.push({label:`Choc Chip Cookies (${sz}) ×${S.cookies.qty}`,price:p*S.cookies.qty});total+=p*S.cookies.qty;
+      const p=cookieP[S.cookies.size]||12;const sz=S.cookies.size==='single'?'Single':'Half Dozen';const flv=S.cookies.flavor==='pb'?'Peanut Butter':'Chocolate Chip';
+      lines.push({label:`${flv} Cookies (${sz}) ×${S.cookies.qty}`,price:p*S.cookies.qty});total+=p*S.cookies.qty;
     }
   }
 

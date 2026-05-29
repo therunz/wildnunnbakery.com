@@ -6,6 +6,7 @@
   <title>The Wild Nunn Bakery</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Pinyon+Script&display=swap" rel="stylesheet"/>
+  <script src="https://sandbox.web.squarecdn.com/v1/square.js"></script>
 
   <style>
     :root {
@@ -239,6 +240,30 @@
     a.menu-card{
       text-decoration: none; display: block; cursor: pointer;
     }
+    /* ── SQUARE CARD WIDGET ── */
+    #square-card-container{
+      margin-top:1.2rem; padding:1.2rem 1.4rem;
+      border:1px solid var(--border); background:var(--surface);
+    }
+    #square-card-container.hidden{ display:none; }
+    .sq-card-label{
+      font-family:'Cinzel',serif; font-size:.6rem; font-weight:600;
+      letter-spacing:.14em; text-transform:uppercase; color:var(--muted);
+      margin-bottom:.8rem;
+    }
+    #card-errors{
+      color:var(--rose); font-size:.88rem; margin-top:.6rem;
+      font-style:italic; min-height:1.2rem;
+    }
+    #pay-card-btn{
+      margin-top:1rem; width:100%;
+      background:var(--sage); color:var(--cream); border:none;
+      font-family:'Cinzel',serif; font-size:.7rem; font-weight:600;
+      letter-spacing:.14em; text-transform:uppercase;
+      padding:.9rem 1.5rem; cursor:pointer; transition:background .2s;
+    }
+    #pay-card-btn:hover{ background:var(--olivewood); }
+    #pay-card-btn:disabled{ background:var(--sand); cursor:not-allowed; }
     .card-gallery-hint{
       display: inline-block; margin-top: .9rem;
       font-family: 'Cinzel', serif; font-size: .58rem; font-weight: 600;
@@ -1392,6 +1417,11 @@
           🚗 <strong>Delivery requires pre-payment.</strong> Please pay via Venmo before your order is delivered.
         </div>
         <div class="pay-opts">
+          <button class="paybtn" onclick="selectPay('card')" id="pay-card">
+            <span class="picon">💳</span>
+            <div class="pname">Pay by Card</div>
+            <div class="psub">Debit or credit, pay now</div>
+          </button>
           <button class="paybtn" onclick="selectPay('venmo')" id="pay-venmo">
             <span class="picon">💙</span>
             <div class="pname">Venmo</div>
@@ -1402,6 +1432,14 @@
             <div class="pname">Pay at Pickup</div>
             <div class="psub">Cash or check on Sunday</div>
           </button>
+        </div>
+
+        <!-- SQUARE CARD WIDGET -->
+        <div id="square-card-container" class="hidden">
+          <div class="sq-card-label">Enter Card Details</div>
+          <div id="sq-card-field"></div>
+          <div id="card-errors"></div>
+          <button id="pay-card-btn" onclick="submitCardPayment()">✦ Pay &amp; Submit Order</button>
         </div>
 
         <div class="venmo-panel" id="venmo-panel">
@@ -1784,8 +1822,19 @@ function selectPay(t){
   S.pay=t;
   document.getElementById('pay-venmo').classList.toggle('sel',t==='venmo');
   document.getElementById('pay-pickup').classList.toggle('sel',t==='pickup');
+  document.getElementById('pay-card').classList.toggle('sel',t==='card');
   document.getElementById('venmo-panel').classList.toggle('vis',t==='venmo');
   document.getElementById('pickup-panel').classList.toggle('vis',t==='pickup');
+  const cardContainer = document.getElementById('square-card-container');
+  const submitBtn = document.getElementById('submit-btn');
+  if(t==='card'){
+    cardContainer.classList.remove('hidden');
+    submitBtn.style.display='none';
+    initSquareCard();
+  } else {
+    cardContainer.classList.add('hidden');
+    submitBtn.style.display='';
+  }
 }
 
 function updatePaymentForDelivery(){
@@ -2084,7 +2133,7 @@ function getAllergies(){
   return a;
 }
 
-async function submitOrder(){
+async function submitOrder(cardPaymentId=null){
   const name=document.getElementById('f-name').value.trim();
   if(!name){alert('Please enter your name before submitting.');return;}
   const phone=document.getElementById('f-phone').value.trim();
@@ -2112,7 +2161,7 @@ async function submitOrder(){
     'Pickup or Delivery Date':pickupDateStr+' · Noon to 2pm',
     'Order':orderText,
     'Estimated Total':totalText,
-    'Payment Method':S.pay==='venmo'?'Venmo (pre-pay)':S.pay==='pickup'?'Pay at Pickup':'Not selected',
+    'Payment Method':S.pay==='venmo'?'Venmo (pre-pay)':S.pay==='card'?`Card (Square) — Payment ID: ${cardPaymentId||'n/a'}`:S.pay==='pickup'?'Pay at Pickup':'Not selected',
     'Delivery':S.delivery.confirmed?`YES — $${S.delivery.fee} flat rate — ${S.delivery.address}`:'No (pickup)',
     'Allergy Flags':allergies.length?allergies.join(', '):'None declared',
     'Large Order':hasBulk?'YES — requires confirmation':'No',
@@ -2152,7 +2201,97 @@ async function submitOrder(){
   }
 }
 
-// Suggestion form
+// ─────────────────────────────────────────
+// SQUARE WEB PAYMENTS
+// ─────────────────────────────────────────
+const SQUARE_APP_ID  = 'sandbox-sq0idb-idZ1-lGDptx3XDbR8g3dTw';
+const SQUARE_LOC_ID  = 'LD3KRPZTKBC6M';
+// Netlify function endpoint — works whether hosted on Netlify or GitHub Pages
+const CHARGE_URL = 'https://wildnunnbakery.netlify.app/.netlify/functions/square-charge';
+
+let sqCard = null;
+let sqPayments = null;
+
+async function initSquareCard(){
+  if(sqCard) return; // already initialized
+  const errors = document.getElementById('card-errors');
+  try {
+    sqPayments = Square.payments(SQUARE_APP_ID, SQUARE_LOC_ID);
+    sqCard = await sqPayments.card({
+      style: {
+        '.input-container': { borderColor: '#c0ae90', borderRadius: '0px' },
+        '.input-container.is-focus': { borderColor: '#4a5e3a' },
+        input: { fontFamily: '"Crimson Pro", Georgia, serif', fontSize: '16px', color: '#1a1208' },
+        'input::placeholder': { color: '#a89070' }
+      }
+    });
+    await sqCard.attach('#sq-card-field');
+  } catch(e) {
+    errors.textContent = 'Card entry failed to load. Please try Venmo or pay at pickup.';
+    console.error('Square init error:', e);
+  }
+}
+
+async function submitCardPayment(){
+  const name  = document.getElementById('f-name').value.trim();
+  if(!name){ alert('Please enter your name before submitting.'); return; }
+  const phone = document.getElementById('f-phone').value.trim();
+  if(!phone){ alert('Please enter a phone number so we can reach you.'); return; }
+  const {lines, total, hasBulk} = calcOrder();
+  if(!lines.length){ alert('Please select at least one item.'); return; }
+
+  const errors  = document.getElementById('card-errors');
+  const btn     = document.getElementById('pay-card-btn');
+  errors.textContent = '';
+  btn.disabled = true;
+  btn.textContent = 'Processing...';
+
+  try {
+    const result = await sqCard.tokenize();
+    if(result.status !== 'OK'){
+      errors.textContent = result.errors?.[0]?.message || 'Card details invalid. Please check and try again.';
+      btn.disabled = false;
+      btn.textContent = '✦ Pay & Submit Order';
+      return;
+    }
+
+    const deliveryTotal = S.delivery.confirmed ? S.delivery.fee : 0;
+    const grandTotal    = total + deliveryTotal;
+    const amountCents   = Math.round(grandTotal * 100);
+    const email         = document.getElementById('f-email').value.trim();
+
+    const chargeRes = await fetch(CHARGE_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        sourceId:     result.token,
+        amountCents,
+        note:         `Wild Nunn Bakery order — ${name}`,
+        buyerName:    name,
+        email:        email || undefined
+      })
+    });
+
+    const chargeData = await chargeRes.json();
+    if(!chargeData.success){
+      errors.textContent = chargeData.error || 'Payment failed. Please try again.';
+      btn.disabled = false;
+      btn.textContent = '✦ Pay & Submit Order';
+      return;
+    }
+
+    // Payment succeeded — now fire Formspree order notification to Sarah
+    S.pay = 'card';
+    await submitOrder(chargeData.paymentId);
+
+  } catch(e) {
+    errors.textContent = 'Something went wrong processing your card. Please try again.';
+    btn.disabled = false;
+    btn.textContent = '✦ Pay & Submit Order';
+    console.error('Card payment error:', e);
+  }
+}
+
 async function sendSuggestion(){
   const val=document.getElementById('suggestion-input').value.trim();
   if(!val) return;

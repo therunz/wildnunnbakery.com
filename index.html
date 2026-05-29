@@ -2262,7 +2262,11 @@ async function submitCardPayment(){
 
     const chargeRes = await fetch(CHARGE_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
       body: JSON.stringify({
         sourceId:     result.token,
         amountCents,
@@ -2272,9 +2276,10 @@ async function submitCardPayment(){
       })
     });
 
-    const chargeData = await chargeRes.json();
+    const chargeData = await chargeRes.json().catch(() => ({ success: false, error: `HTTP ${chargeRes.status} — ${chargeRes.statusText}` }));
     if(!chargeData.success){
       errors.textContent = chargeData.error || 'Payment failed. Please try again.';
+      console.error('Charge failed:', chargeData);
       btn.disabled = false;
       btn.textContent = '✦ Pay & Submit Order';
       return;

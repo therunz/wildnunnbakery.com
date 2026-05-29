@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Events — The Wild Nunn Bakery</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Pinyon+Script&display=swap" rel="stylesheet"/>
+
+  <style>
+    :root{
+      --parchment:#f0ebe0; --cream:#f8f4ec; --warm-mid:#e6ddc8;
+      --surface:#f4efe4; --surface2:#ece5d2; --sand:#c9b99a;
+      --olive:#6b7a55; --sage:#4a5e3a; --olivewood:#1e2614; --bark:#4a3b28;
+      --rose:#8c4a5a; --rose-lt:#b07080; --rose-pale:#e8d5d8;
+      --gold:#8a6830; --gold-lt:#b08840;
+      --border:#c0ae90; --border2:#a89070; --muted:#6a5840;
+      --ink:#1a1208; --shadow:rgba(20,15,5,0.14);
+      --plum:#3a1e2c; --plum-lt:#5a2e42;
+    }
+    *{margin:0;padding:0;box-sizing:border-box;}
+    html{scroll-behavior:smooth;}
+    body{
+      background:var(--parchment); color:var(--ink);
+      font-family:'Crimson Pro',Georgia,serif; font-size:18px; line-height:1.75;
+      overflow-x:hidden;
+    }
+    body::before{
+      content:''; position:fixed; inset:0; pointer-events:none; z-index:9997;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+      opacity:.7;
+    }
+
+    /* NAV */
+    nav{
+      position:sticky; top:0; z-index:200;
+      background:rgba(30,38,20,0.97); backdrop-filter:blur(12px);
+      border-bottom:1px solid var(--olive);
+      padding:.85rem 2.5rem;
+      display:flex; align-items:center; justify-content:space-between;
+    }
+    .nav-brand{font-family:'Pinyon Script',cursive; font-size:1.6rem; color:var(--rose-lt); text-decoration:none;}
+    .nav-links{display:flex; gap:2rem; list-style:none;}
+    .nav-links a{
+      font-family:'Cinzel',serif; font-size:.62rem; font-weight:600;
+      letter-spacing:.18em; text-transform:uppercase;
+      color:rgba(240,235,224,.65); text-decoration:none; transition:color .2s;
+    }
+    .nav-links a:hover{color:var(--rose-lt);}
+    .nav-links a.active{color:var(--rose-lt);}
+    @media(max-width:620px){
+      nav{padding:.75rem 1.2rem;}
+      .nav-links{gap:1.1rem;}
+      .nav-links a{font-size:.55rem; letter-spacing:.1em;}
+    }
+
+    /* EVENT BANNER */
+    #event-banner{
+      display:none; background:var(--sage); color:var(--cream);
+      text-align:center; padding:.65rem 1.5rem;
+      font-family:'Cinzel',serif; font-size:.68rem; letter-spacing:.12em; text-transform:uppercase;
+      border-bottom:1px solid var(--olive);
+    }
+    #event-banner a{color:var(--cream); text-decoration:underline; text-underline-offset:3px;}
+
+    /* PAGE HEADER */
+    .page-header{
+      background:var(--olivewood); color:var(--cream);
+      text-align:center; padding:4rem 2rem 3rem;
+      border-bottom:2px solid var(--olive);
+    }
+    .page-eyebrow{
+      font-family:'Cinzel',serif; font-size:.62rem; font-weight:600;
+      letter-spacing:.22em; text-transform:uppercase; color:var(--rose-lt);
+      margin-bottom:.8rem;
+    }
+    .page-title{
+      font-family:'IM Fell English',serif; font-size:clamp(2rem,5vw,3.2rem);
+      color:var(--cream); font-weight:400; line-height:1.2;
+    }
+    .page-title em{font-style:italic; color:var(--rose-lt);}
+    .page-subtitle{
+      font-style:italic; color:rgba(240,235,224,.7);
+      font-size:1rem; margin-top:.8rem;
+    }
+
+    /* MAIN CONTENT */
+    .events-wrap{
+      max-width:1000px; margin:0 auto; padding:3rem 2rem 5rem;
+      display:grid; grid-template-columns:1fr 1fr; gap:3rem; align-items:start;
+    }
+    @media(max-width:700px){
+      .events-wrap{grid-template-columns:1fr; gap:2rem; padding:2rem 1.2rem 4rem;}
+    }
+
+    /* CALENDAR */
+    .cal-section h2{
+      font-family:'IM Fell English',serif; font-size:1.3rem; color:var(--olivewood);
+      margin-bottom:1.2rem; border-bottom:1px solid var(--border); padding-bottom:.5rem;
+    }
+    .cal-nav{
+      display:flex; align-items:center; justify-content:space-between;
+      margin-bottom:.8rem;
+    }
+    .cal-nav button{
+      background:none; border:1px solid var(--border); color:var(--muted);
+      font-family:'Cinzel',serif; font-size:.6rem; letter-spacing:.1em;
+      padding:.3rem .7rem; cursor:pointer; transition:all .2s;
+    }
+    .cal-nav button:hover{border-color:var(--sage); color:var(--sage);}
+    .cal-month-label{
+      font-family:'Cinzel',serif; font-size:.75rem; font-weight:600;
+      letter-spacing:.15em; text-transform:uppercase; color:var(--olivewood);
+    }
+    .cal-grid{
+      display:grid; grid-template-columns:repeat(7,1fr);
+      border:1px solid var(--border); background:var(--border);
+      gap:1px;
+    }
+    .cal-day-header{
+      background:var(--olivewood); color:rgba(240,235,224,.7);
+      font-family:'Cinzel',serif; font-size:.5rem; letter-spacing:.1em;
+      text-align:center; padding:.4rem 0; text-transform:uppercase;
+    }
+    .cal-day{
+      background:var(--surface); min-height:48px; padding:.3rem .4rem;
+      font-family:'Crimson Pro',serif; font-size:.85rem; color:var(--muted);
+      position:relative; cursor:default;
+    }
+    .cal-day.empty{background:var(--surface2);}
+    .cal-day.today{background:var(--warm-mid);}
+    .cal-day.has-event{
+      background:var(--cream); cursor:pointer;
+    }
+    .cal-day.has-event:hover{background:var(--warm-mid);}
+    .cal-day .day-num{display:block; font-weight:500;}
+    .cal-day.today .day-num{
+      color:var(--rose); font-weight:700;
+    }
+    .cal-event-dot{
+      width:6px; height:6px; border-radius:50%;
+      background:var(--sage); display:inline-block;
+      margin-top:3px;
+    }
+    .cal-day.has-event .day-num{color:var(--sage); font-weight:700;}
+
+    /* EVENT LIST */
+    .events-section h2{
+      font-family:'IM Fell English',serif; font-size:1.3rem; color:var(--olivewood);
+      margin-bottom:1.2rem; border-bottom:1px solid var(--border); padding-bottom:.5rem;
+    }
+    .event-card{
+      border:1px solid var(--border); background:var(--surface);
+      padding:1.4rem 1.6rem; margin-bottom:1rem;
+      position:relative; transition:background .2s;
+    }
+    .event-card:hover{background:var(--warm-mid);}
+    .event-card.today-event{
+      border-color:var(--sage); border-left:4px solid var(--sage);
+    }
+    .event-card.today-event::before{
+      content:'TODAY'; position:absolute; top:.7rem; right:.9rem;
+      font-family:'Cinzel',serif; font-size:.5rem; font-weight:700;
+      letter-spacing:.15em; color:var(--sage);
+    }
+    .event-date{
+      font-family:'Cinzel',serif; font-size:.62rem; font-weight:600;
+      letter-spacing:.14em; text-transform:uppercase; color:var(--rose);
+      margin-bottom:.35rem;
+    }
+    .event-name{
+      font-family:'IM Fell English',serif; font-size:1.2rem;
+      color:var(--olivewood); margin-bottom:.2rem;
+    }
+    .event-time{
+      font-style:italic; font-size:.9rem; color:var(--muted); margin-bottom:.3rem;
+    }
+    .event-address{
+      font-size:.88rem; color:var(--muted);
+    }
+    .event-address a{
+      color:var(--sage); text-decoration:none; border-bottom:1px solid var(--sage);
+      padding-bottom:1px; transition:color .2s;
+    }
+    .event-address a:hover{color:var(--rose); border-color:var(--rose);}
+
+    /* FOOTER */
+    footer{
+      background:var(--olivewood); color:rgba(240,235,224,.5);
+      text-align:center; padding:2.5rem 2rem;
+      font-family:'Cinzel',serif; font-size:.6rem; letter-spacing:.14em; text-transform:uppercase;
+    }
+    footer a{color:var(--rose-lt); text-decoration:none;}
+    footer a:hover{color:var(--cream);}
+    .ornament{font-size:1.2rem; color:var(--rose-lt); text-align:center; padding:2rem 0 0;}
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-brand">Wild Nunn Bakery</a>
+  <ul class="nav-links">
+    <li><a href="index.html#offerings">Menu</a></li>
+    <li><a href="events.html" class="active">Events</a></li>
+    <li><a href="index.html#about">Story</a></li>
+    <li><a href="index.html#order">Order</a></li>
+    <li><a href="index.html#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- EVENT BANNER -->
+<div id="event-banner">
+  <span id="event-banner-text"></span> &nbsp;·&nbsp; <a href="#events-list">See Details ↓</a>
+</div>
+
+<div class="page-header">
+  <div class="page-eyebrow">Come Find Us</div>
+  <h1 class="page-title">Where We'll <em>Be</em></h1>
+  <p class="page-subtitle">Markets, pop-ups, and community events — fresh from the oven to wherever we land.</p>
+</div>
+
+<div class="events-wrap">
+
+  <!-- CALENDAR -->
+  <div class="cal-section">
+    <h2>Calendar</h2>
+    <div class="cal-nav">
+      <button onclick="changeMonth(-1)">← Prev</button>
+      <span class="cal-month-label" id="cal-month-label"></span>
+      <button onclick="changeMonth(1)">Next →</button>
+    </div>
+    <div class="cal-grid" id="cal-grid"></div>
+  </div>
+
+  <!-- EVENT LIST -->
+  <div class="events-section" id="events-list">
+    <h2>Upcoming Events</h2>
+    <div id="events-list-inner"></div>
+  </div>
+
+</div>
+
+<div class="ornament">❧ &nbsp; ❦ &nbsp; ❧</div>
+
+<footer>
+  <p>&copy; 2026 The Wild Nunn Bakery &nbsp;❦&nbsp; Indiana Cottage Food &nbsp;❦&nbsp;
+  <a href="index.html">Back to Main Site</a></p>
+</footer>
+
+<script>
+const EVENTS = [
+  {
+    date: "2026-05-31",
+    name: "Walnut Ridge Nursery Market",
+    time: "1:00pm – 4:00pm",
+    address: "2108 Hamburg Pike, Jeffersonville, IN 47130",
+    mapsUrl: "https://maps.google.com/?q=2108+Hamburg+Pike,+Jeffersonville,+IN+47130"
+  },
+  {
+    date: "2026-06-07",
+    name: "Walnut Ridge Nursery Market",
+    time: "1:00pm – 4:00pm",
+    address: "2108 Hamburg Pike, Jeffersonville, IN 47130",
+    mapsUrl: "https://maps.google.com/?q=2108+Hamburg+Pike,+Jeffersonville,+IN+47130"
+  },
+  {
+    date: "2026-06-14",
+    name: "Walnut Ridge Nursery Market",
+    time: "1:00pm – 4:00pm",
+    address: "2108 Hamburg Pike, Jeffersonville, IN 47130",
+    mapsUrl: "https://maps.google.com/?q=2108+Hamburg+Pike,+Jeffersonville,+IN+47130"
+  },
+  {
+    date: "2026-06-26",
+    name: "Harrison County Pride",
+    time: "3:00pm – 8:00pm",
+    address: "296 Valley Rd, Corydon, IN 47112",
+    mapsUrl: "https://maps.google.com/?q=296+Valley+Rd,+Corydon,+IN+47112"
+  }
+];
+
+// Live event banner
+const LIVE_EVENTS = [
+  {name:"Walnut Ridge Nursery Market", start:"2026-05-31T13:00", end:"2026-05-31T16:00"},
+  {name:"Walnut Ridge Nursery Market", start:"2026-06-07T13:00", end:"2026-06-07T16:00"},
+  {name:"Walnut Ridge Nursery Market", start:"2026-06-14T13:00", end:"2026-06-14T16:00"},
+  {name:"Harrison County Pride",       start:"2026-06-26T15:00", end:"2026-06-26T20:00"}
+];
+(function(){
+  const now = new Date();
+  const active = LIVE_EVENTS.find(e => now >= new Date(e.start) && now <= new Date(e.end));
+  if(active){
+    document.getElementById('event-banner-text').textContent = 'Come see us at ' + active.name + ' today!';
+    document.getElementById('event-banner').style.display = 'block';
+  }
+})();
+
+// Calendar
+let calYear, calMonth;
+const today = new Date();
+
+function init(){
+  calYear  = today.getFullYear();
+  calMonth = today.getMonth();
+  renderCal();
+  renderList();
+}
+
+function changeMonth(d){
+  calMonth += d;
+  if(calMonth > 11){ calMonth = 0; calYear++; }
+  if(calMonth < 0) { calMonth = 11; calYear--; }
+  renderCal();
+}
+
+function renderCal(){
+  const monthNames = ["January","February","March","April","May","June",
+                      "July","August","September","October","November","December"];
+  document.getElementById('cal-month-label').textContent = monthNames[calMonth] + ' ' + calYear;
+
+  const eventDates = new Set(EVENTS.map(e => e.date));
+  const grid = document.getElementById('cal-grid');
+  grid.innerHTML = '';
+
+  // Day headers
+  ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].forEach(d => {
+    const h = document.createElement('div');
+    h.className = 'cal-day-header';
+    h.textContent = d;
+    grid.appendChild(h);
+  });
+
+  const firstDay = new Date(calYear, calMonth, 1).getDay();
+  const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+  const todayStr = today.toISOString().slice(0,10);
+
+  // Empty cells
+  for(let i = 0; i < firstDay; i++){
+    const e = document.createElement('div');
+    e.className = 'cal-day empty';
+    grid.appendChild(e);
+  }
+
+  // Day cells
+  for(let d = 1; d <= daysInMonth; d++){
+    const dateStr = `${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const cell = document.createElement('div');
+    const classes = ['cal-day'];
+    if(dateStr === todayStr) classes.push('today');
+    if(eventDates.has(dateStr)) classes.push('has-event');
+    cell.className = classes.join(' ');
+    cell.innerHTML = `<span class="day-num">${d}</span>${eventDates.has(dateStr) ? '<span class="cal-event-dot"></span>' : ''}`;
+    if(eventDates.has(dateStr)){
+      cell.title = EVENTS.filter(e => e.date === dateStr).map(e => e.name).join(', ');
+      cell.onclick = () => {
+        document.getElementById('events-list').scrollIntoView({behavior:'smooth'});
+      };
+    }
+    grid.appendChild(cell);
+  }
+}
+
+function renderList(){
+  const container = document.getElementById('events-list-inner');
+  const todayStr = today.toISOString().slice(0,10);
+  const upcoming = EVENTS.filter(e => e.date >= todayStr);
+
+  if(upcoming.length === 0){
+    container.innerHTML = '<p style="font-style:italic;color:var(--muted);">No upcoming events scheduled. Check back soon!</p>';
+    return;
+  }
+
+  upcoming.forEach(ev => {
+    const isToday = ev.date === todayStr;
+    const dateObj = new Date(ev.date + 'T12:00:00');
+    const dateLabel = dateObj.toLocaleDateString('en-US', {weekday:'long', month:'long', day:'numeric', year:'numeric'});
+    const card = document.createElement('div');
+    card.className = 'event-card' + (isToday ? ' today-event' : '');
+    card.innerHTML = `
+      <div class="event-date">${dateLabel}</div>
+      <div class="event-name">${ev.name}</div>
+      <div class="event-time">${ev.time}</div>
+      <div class="event-address"><a href="${ev.mapsUrl}" target="_blank" rel="noopener">${ev.address} ↗</a></div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+init();
+</script>
+</body>
+</html>

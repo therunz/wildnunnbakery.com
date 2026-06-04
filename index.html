@@ -854,13 +854,13 @@
       <div class="menu-card">
         <span class="menu-card-glyph">🥯</span>
         <h3>Bagels</h3>
-        <div class="price">$3 each · $12 Half Dozen</div>
+        <div class="price">$12 Half Dozen</div>
         <p>Hand-rolled sourdough bagels with a proper chew. Because someone has to do it right in Indiana.</p>
       </div>
       <div class="menu-card">
         <span class="menu-card-glyph">🧈</span>
         <h3>English Muffins</h3>
-        <div class="price">$2 each · $8 Half Dozen</div>
+        <div class="price">$8 Half Dozen</div>
         <p>All the nooks, all the crannies, none of the mass-production sadness.</p>
       </div>
       <a class="menu-card menu-card-link" href="gallery.html#rolls" title="View our Dinner Rolls Gallery">
@@ -1139,7 +1139,7 @@
             <div class="item-row-header" onclick="toggleItem('bagels')">
               <div class="item-row-left">
                 <span>🥯</span>
-                <div><div class="item-row-name">Bagels</div><div class="item-row-price">$3 each · $12 half dozen</div></div>
+                <div><div class="item-row-name">Bagels</div><div class="item-row-price">$12 half dozen</div></div>
               </div>
               <div class="item-row-toggle" id="tog-bagels">+</div>
             </div>
@@ -1167,7 +1167,7 @@
             <div class="item-row-header" onclick="toggleItem('muffins')">
               <div class="item-row-left">
                 <span>🧈</span>
-                <div><div class="item-row-name">English Muffins</div><div class="item-row-price">$2 each · $8 half dozen</div></div>
+                <div><div class="item-row-name">English Muffins</div><div class="item-row-price">$8 half dozen</div></div>
               </div>
               <div class="item-row-toggle" id="tog-muffins">+</div>
             </div>
@@ -1611,8 +1611,8 @@ function toggleItem(k){
     if(k==='cookies') renderPacks('cookies',[{l:'Single — $3',v:'single',p:3},{l:'Half Dozen — $12',v:'half',p:12}]);
     if(k==='hotdog')  renderPacks('hotdog', [{l:'4-Pack',v:'4pk',p:6},{l:'6-Pack',v:'6pk',p:8}]);
     if(k==='burger')  renderPacks('burger', [{l:'4-Pack',v:'4pk',p:6},{l:'6-Pack',v:'6pk',p:8}]);
-    if(k==='bagels')  renderPacks('bagels', [{l:'Single — $3',v:'single',p:3},{l:'Half Dozen — $12',v:'half',p:12}]);
-    if(k==='muffins') renderPacks('muffins',[{l:'Single — $2',v:'single',p:2},{l:'Half Dozen — $8',v:'half',p:8}]);
+    if(k==='bagels')  renderPacks('bagels', [{l:'Half Dozen — $12',v:'half',p:12}]);
+    if(k==='muffins') renderPacks('muffins',[{l:'Half Dozen — $8', v:'half',p:8}]);
     if(k==='seasonal') showCustomNote();
     if(k==='drolls') {};
     if(k==='sandwich') {};

@@ -828,7 +828,7 @@
         <span class="menu-card-glyph">🍞</span>
         <h3>Sourdough Loaves</h3>
         <div class="price">from $10</div>
-        <p>Classic, simple inclusions (Cinnamon Brown Sugar, Cheddar, Everything Bagel), or premium inclusions (Cheddar Jalapeño, Dark Chocolate Croissant Loaf).</p>
+        <p>Classic, simple inclusions (Cinnamon Brown Sugar, Cheddar, Everything Bagel), or premium inclusions (Cheddar Jalapeño, Dark Chocolate Croissant Loaf, Strawberry).</p>
         <span class="card-gallery-hint">View Gallery →</span>
       </a>
       <a class="menu-card menu-card-link" href="gallery.html#cookies" title="View our Cookie Gallery">
@@ -876,12 +876,13 @@
         <div class="price">$6 / Loaf</div>
         <p>A soft, pillowy 8-inch sourdough discard sandwich loaf — the everyday bread you didn't know you were missing. Perfect for sandwiches, toast, or just eating straight from the bag.</p>
       </div>
-            <div class="menu-card">
+      <a class="menu-card menu-card-link" href="gallery.html#seasonal" title="View our Seasonal Special Gallery">
         <span class="menu-card-glyph">🌿</span>
-        <h3>Seasonal Specials</h3>
-        <div class="price">Varies by season</div>
-        <p>Limited runs tied to the season and the mood. Follow along so you don't miss them.</p>
-      </div>
+        <h3>Seasonal Special</h3>
+        <div class="price">$14</div>
+        <p>This season's special: <strong>Blueberry Lemon Loaf</strong> — wild sourdough packed with fresh blueberries and bright lemon zest, baked until the berries burst into the crumb. Summer in every slice.</p>
+        <span class="card-gallery-hint">View Gallery →</span>
+      </a>
     </div>
   </div>
 </section>
@@ -1259,16 +1260,18 @@
             <div class="item-row-header" onclick="toggleItem('seasonal')">
               <div class="item-row-left">
                 <span>🌿</span>
-                <div><div class="item-row-name">Seasonal Special</div><div class="item-row-price">Ask us!</div></div>
+                <div><div class="item-row-name">Blueberry Lemon Loaf <span style="font-size:.7rem;color:var(--sage);font-family:'Cinzel',serif;letter-spacing:.08em;">SEASONAL</span></div><div class="item-row-price">$14</div></div>
               </div>
               <div class="item-row-toggle" id="tog-seasonal">+</div>
             </div>
             <div class="item-builder" id="builder-seasonal">
-              <h4>🌿 Seasonal Special</h4>
-              <p style="font-style:italic;font-size:.88rem;color:var(--muted);margin-bottom:.9rem;">We'll confirm availability and pricing when we reach out.</p>
-              <div class="form-row">
-                <label>What seasonal item are you hoping for?</label>
-                <textarea id="seasonal-note" placeholder="Describe what you're hoping for..."></textarea>
+              <h4>🌿 Blueberry Lemon Loaf — Seasonal Special</h4>
+              <p style="font-style:italic;font-size:.88rem;color:var(--muted);margin-bottom:.9rem;">Wild sourdough packed with fresh blueberries and bright lemon zest. $14 per loaf — available while the season lasts.</p>
+              <div class="bqty">
+                <button class="qbtn" onclick="changeSeasonalQty(-1)">−</button>
+                <span class="qdisplay" id="seasonal-qty-d">1</span>
+                <button class="qbtn" onclick="changeSeasonalQty(1)">+</button>
+                <span class="qlabel">loaves (max 3)</span>
               </div>
             </div>
           </div>
@@ -1393,11 +1396,6 @@
           🚗 <strong>Delivery requires pre-payment.</strong> Please pay via Venmo before your order is delivered.
         </div>
         <div class="pay-opts">
-          <button class="paybtn" onclick="selectPay('square')" id="pay-square">
-            <span class="picon">💳</span>
-            <div class="pname">Square</div>
-            <div class="psub">Pay by card after submitting</div>
-          </button>
           <button class="paybtn" onclick="selectPay('venmo')" id="pay-venmo">
             <span class="picon">💙</span>
             <div class="pname">Venmo</div>
@@ -1586,7 +1584,7 @@ const S = {
   tortillas:{on:false,qty:1,bulk:false},
   bagels:   {on:false,qty:1,size:'half',bulk:false},
   muffins:  {on:false,qty:1,size:'half',bulk:false},
-  seasonal: {on:false},
+  seasonal: {on:false,qty:1},
   feral:    {on:false,qty:1,style:'seeds'},
   drolls:   {on:false,qty:1,seeds:'seeds',bulk:false},
   sandwich: {on:false,qty:1,bulk:false},
@@ -1596,7 +1594,7 @@ const S = {
 
 const LP={plain:10,simple:12,premium:14};
 const SF=['Cinnamon Brown Sugar','Cheddar','Everything Bagel'];
-const PF=['Cheddar Jalapeño','Dark Chocolate Croissant Loaf'];
+const PF=['Cheddar Jalapeño','Dark Chocolate Croissant Loaf','Strawberry'];
 
 function toggleItem(k){
   S[k].on=!S[k].on;
@@ -1664,6 +1662,11 @@ function renderLoafEntries(){
 function setLoafType(i,t){S.loaf.entries[i]={type:t,flavor:null};renderLoafEntries();updateSummary();}
 function setLoafFlavor(i,f){S.loaf.entries[i].flavor=f;updateSummary();}
 
+function changeSeasonalQty(d){
+  S.seasonal.qty = Math.max(1, Math.min(3, (S.seasonal.qty||1) + d));
+  document.getElementById('seasonal-qty-d').textContent = S.seasonal.qty;
+  updateSummary();
+}
 function changePackQty(k,d){
   S[k].qty=Math.min(5,Math.max(1,S[k].qty+d));
   document.getElementById(k+'-qty-d').textContent=S[k].qty;
@@ -1758,7 +1761,7 @@ function calcOrder(){
       if(bq>0){lines.push({label:`Soft Sandwich Bread ×${bq} loaves (LARGE — subject to confirmation)`,price:0,bulk:true});hasBulk=true;}
     } else {lines.push({label:`Soft Sandwich Bread ×${S.sandwich.qty} loaves`,price:6*S.sandwich.qty});total+=6*S.sandwich.qty;}
   }
-  if(S.seasonal.on){lines.push({label:'Seasonal Special (price TBD)',price:0});}
+  if(S.seasonal.on){lines.push({label:`Blueberry Lemon Loaf (Seasonal) ×${S.seasonal.qty}`,price:14*S.seasonal.qty});total+=14*S.seasonal.qty;}
 
   return{lines,total,hasBulk};
 }
@@ -1790,7 +1793,6 @@ function selectPay(t){
   S.pay=t;
   document.getElementById('pay-venmo').classList.toggle('sel',t==='venmo');
   document.getElementById('pay-pickup').classList.toggle('sel',t==='pickup');
-  document.getElementById('pay-square').classList.toggle('sel',t==='square');
   document.getElementById('venmo-panel').classList.toggle('vis',t==='venmo');
   document.getElementById('pickup-panel').classList.toggle('vis',t==='pickup');
 }
@@ -2101,7 +2103,6 @@ async function submitOrder(){
 
   const email=document.getElementById('f-email').value;
   const note=document.getElementById('f-note')?document.getElementById('f-note').value:'';
-  const seasonal=document.getElementById('seasonal-note')?document.getElementById('seasonal-note').value:'';
   const allergies=getAllergies();
 
   let orderText=lines.map(l=>`${l.label}: ${l.price?'$'+l.price:l.bulk?'LARGE ORDER (TBC)':'TBD'}`).join('\n');
@@ -2119,12 +2120,11 @@ async function submitOrder(){
     'Pickup or Delivery Date':pickupDateStr+' · Noon to 2pm',
     'Order':orderText,
     'Estimated Total':totalText,
-    'Payment Method':S.pay==='venmo'?'Venmo (pre-pay)':S.pay==='square'?'Square (card — link sent after order)':S.pay==='pickup'?'Pay at Pickup':'Not selected',
+    'Payment Method':S.pay==='venmo'?'Venmo (pre-pay)':S.pay==='pickup'?'Pay at Pickup':'Not selected',
     'Delivery':S.delivery.confirmed?`YES — $${S.delivery.fee} flat rate — ${S.delivery.address}`:'No (pickup)',
     'Allergy Flags':allergies.length?allergies.join(', '):'None declared',
     'Large Order':hasBulk?'YES — requires confirmation':'No',
     'Dinner Rolls Seeds':S.drolls.on?(S.drolls.seeds==='seeds'?'With Seeds':'No Seeds'):'N/A',
-    'Seasonal Note':seasonal||'N/A',
     'Additional Notes':note||'None',
   };
 
@@ -2153,17 +2153,8 @@ async function submitOrder(){
         <br><br>
         <strong>Order Total: $${grandTotal}</strong>
         <br><br>
-        To complete your order, please pay using one of the options below:
+        Please pay via Venmo to complete your order:
         <br><br>
-        <a href="https://square.link/u/ATfLw8RV" target="_blank" rel="noopener" style="
-          display:inline-block; margin:0 .5rem .5rem 0;
-          background:var(--olivewood); color:var(--cream);
-          font-family:'Cinzel',serif; font-size:.65rem; font-weight:600;
-          letter-spacing:.12em; text-transform:uppercase;
-          padding:.75rem 1.4rem; text-decoration:none;
-          border:1px solid var(--olive); transition:background .2s;
-        ">💳 Pay with Square →</a>
-        &nbsp;
         <a href="https://venmo.com/sarahnunn2020" target="_blank" rel="noopener" style="
           display:inline-block; margin:0 .5rem .5rem 0;
           background:#008CFF; color:#fff;
@@ -2171,9 +2162,9 @@ async function submitOrder(){
           letter-spacing:.12em; text-transform:uppercase;
           padding:.75rem 1.4rem; text-decoration:none;
           border:1px solid #0070cc; transition:background .2s;
-        ">💙 Pay with Venmo →</a>
+        ">💙 Pay with Venmo @sarahnunn2020 →</a>
         <br><br>
-        <span style="font-size:.82rem;color:var(--muted);">Please include your name and order total in the payment note. Sarah will confirm your order once payment is received.</span>
+        <span style="font-size:.82rem;color:var(--muted);">Please include your name and order total in the Venmo note. Sarah will confirm your order once payment is received.</span>
       `;
       status.scrollIntoView({behavior:'smooth',block:'center'});
     } else {

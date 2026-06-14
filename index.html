@@ -835,7 +835,7 @@
         <span class="menu-card-glyph">🍪</span>
         <h3>Cookies</h3>
         <div class="price">$3 each · $12 Half Dozen</div>
-        <p>Sourdough cookies in rotating flavors — chocolate chip and peanut butter are our standbys, chewy-edged and made with the same wild starter as everything else.</p>
+        <p>Sourdough cookies in rotating flavors — chocolate chip, peanut butter, and white chocolate macadamia nut are our standbys, chewy-edged and made with the same wild starter as everything else.</p>
         <span class="card-gallery-hint">View Gallery →</span>
       </a>
       <a class="menu-card menu-card-link" href="gallery.html#buns" title="View our Buns Gallery">
@@ -1033,6 +1033,10 @@
                 <label class="rpill">
                   <input type="radio" name="cookie-flavor" value="pb" onchange="S.cookies.flavor=this.value;updateSummary()">
                   🥜 Peanut Butter
+                </label>
+                <label class="rpill">
+                  <input type="radio" name="cookie-flavor" value="wcmn" onchange="S.cookies.flavor=this.value;updateSummary()">
+                  🍪 White Choc Macadamia Nut
                 </label>
               </div>
               <div class="bqty">
@@ -1410,10 +1414,10 @@
 
         <div class="venmo-panel" id="venmo-panel">
           <div class="venmo-qr">
-            <img src="Venmo.png" alt="Venmo QR — @sarahnunn2020"/>
+            <img src="Venmo.png" alt="Venmo QR — @wildnunnbakery"/>
           </div>
           <div class="venmo-text">
-            <div class="venmo-handle">@sarahnunn2020</div>
+            <div class="venmo-handle">@wildnunnbakery</div>
             <div class="venmo-note">Scan to pay. Please include your name and order summary in the Venmo note. Save time and pre-pay before pickup — we'll have your order ready and waiting.</div>
           </div>
         </div>
@@ -1471,7 +1475,7 @@
         <div class="cicon">💙</div>
         <div>
           <div class="clabel">Venmo</div>
-          <div class="cvalue"><a href="https://venmo.com/sarahnunn2020">@sarahnunn2020</a></div>
+          <div class="cvalue"><a href="https://venmo.com/wildnunnbakery">@wildnunnbakery</a></div>
         </div>
       </div>
       <div class="crow">
@@ -1707,7 +1711,7 @@ function calcOrder(){
       const bq=parseInt(document.getElementById('bulk-cookies-qty').value)||0;
       if(bq>0){lines.push({label:`Cookies ×${bq} (LARGE — subject to confirmation)`,price:0,bulk:true});hasBulk=true;}
     } else {
-      const p=cookieP[S.cookies.size]||12;const sz=S.cookies.size==='single'?'Single':'Half Dozen';const flv=S.cookies.flavor==='pb'?'Peanut Butter':'Chocolate Chip';
+      const p=cookieP[S.cookies.size]||12;const sz=S.cookies.size==='single'?'Single':'Half Dozen';const flv=S.cookies.flavor==='pb'?'Peanut Butter':S.cookies.flavor==='wcmn'?'White Choc Macadamia Nut':'Chocolate Chip';
       lines.push({label:`${flv} Cookies (${sz}) ×${S.cookies.qty}`,price:p*S.cookies.qty});total+=p*S.cookies.qty;
     }
   }
@@ -2155,14 +2159,14 @@ async function submitOrder(){
         <br><br>
         Please pay via Venmo to complete your order:
         <br><br>
-        <a href="https://venmo.com/sarahnunn2020" target="_blank" rel="noopener" style="
+        <a href="https://venmo.com/wildnunnbakery" target="_blank" rel="noopener" style="
           display:inline-block; margin:0 .5rem .5rem 0;
           background:#008CFF; color:#fff;
           font-family:'Cinzel',serif; font-size:.65rem; font-weight:600;
           letter-spacing:.12em; text-transform:uppercase;
           padding:.75rem 1.4rem; text-decoration:none;
           border:1px solid #0070cc; transition:background .2s;
-        ">💙 Pay with Venmo @sarahnunn2020 →</a>
+        ">💙 Pay with Venmo @wildnunnbakery →</a>
         <br><br>
         <span style="font-size:.82rem;color:var(--muted);">Please include your name and order total in the Venmo note. Sarah will confirm your order once payment is received.</span>
       `;

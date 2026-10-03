@@ -843,7 +843,7 @@
         <span class="menu-card-glyph">🍞</span>
         <h3>Sourdough Loaves</h3>
         <div class="price">from $10</div>
-        <p>Classic, simple inclusions (Cinnamon Brown Sugar, Cheddar, Everything Bagel, Roasted Garlic Mozzarella), or premium inclusions (Cheddar Jalapeño, Dark Chocolate Croissant Loaf, Strawberry, Cabernet, Honey Pistachio, PB&amp;J).</p>
+        <p>Hand-shaped wild sourdough in three styles: classic, simple inclusions (like Cheddar and Cinnamon Brown Sugar), and premium inclusions (like Maple Nut, Apple Cider, and Honey Pistachio).</p>
         <span class="card-gallery-hint">View Gallery →</span>
       </a>
       <a class="menu-card menu-card-link" href="gallery.html#cookies" title="View our Cookie Gallery">
@@ -886,16 +886,22 @@
         <span class="card-gallery-hint">View Gallery →</span>
       </a>
       <div class="menu-card">
+        <span class="menu-card-glyph">🥐</span>
+        <h3>Cinnamon Rolls</h3>
+        <div class="price">$6 each · $20 / 4-Pack</div>
+        <p>Soft, gooey sourdough cinnamon rolls in two varieties: our classic <strong>Iced Cinnamon Roll</strong> and a seasonal <strong>Pumpkin Roll</strong>.</p>
+      </div>
+      <div class="menu-card">
         <span class="menu-card-glyph">🍽️</span>
         <h3>Soft Sandwich Bread</h3>
         <div class="price">$6 / Loaf</div>
         <p>A soft, pillowy 8-inch sourdough discard sandwich loaf — the everyday bread you didn't know you were missing. Perfect for sandwiches, toast, or just eating straight from the bag.</p>
       </div>
       <a class="menu-card menu-card-link" href="gallery.html#seasonal" title="View our Seasonal Special Gallery">
-        <span class="menu-card-glyph">🌿</span>
+        <span class="menu-card-glyph">🎃</span>
         <h3>Seasonal Special</h3>
-        <div class="price">$14</div>
-        <p>This season's special: <strong>Blueberry Lemon Loaf</strong> — wild sourdough packed with fresh blueberries and bright lemon zest, baked until the berries burst into the crumb. Summer in every slice.</p>
+        <div class="price">$12</div>
+        <p>This season's special: <strong>Pumpkin Loaf</strong> — wild sourdough baked with pumpkin and warm fall spices. Autumn in every slice.</p>
         <span class="card-gallery-hint">View Gallery →</span>
       </a>
     </div>
@@ -1060,6 +1066,18 @@
                 <label class="rpill">
                   <input type="radio" name="cookie-flavor" value="snick" onchange="S.cookies.flavor=this.value;updateSummary()">
                   🌀 Snickerdoodle
+                </label>
+                <label class="rpill">
+                  <input type="radio" name="cookie-flavor" value="chocpb" onchange="S.cookies.flavor=this.value;updateSummary()">
+                  🍫🥜 Chocolate Peanut Butter
+                </label>
+                <label class="rpill">
+                  <input type="radio" name="cookie-flavor" value="pumpsnick" onchange="S.cookies.flavor=this.value;updateSummary()">
+                  🎃 Pumpkin Snickerdoodle
+                </label>
+                <label class="rpill">
+                  <input type="radio" name="cookie-flavor" value="mm" onchange="S.cookies.flavor=this.value;updateSummary()">
+                  🍬 M&amp;M
                 </label>
               </div>
               <div class="bqty">
@@ -1255,6 +1273,45 @@
             </div>
           </div>
 
+          <!-- CINNAMON ROLLS -->
+          <div class="item-row" id="row-crolls">
+            <div class="item-row-header" onclick="toggleItem('crolls')">
+              <div class="item-row-left">
+                <span>🥐</span>
+                <div><div class="item-row-name">Cinnamon Rolls</div><div class="item-row-price">$6 each · $20 / 4-pack</div></div>
+              </div>
+              <div class="item-row-toggle" id="tog-crolls">+</div>
+            </div>
+            <div class="item-builder" id="builder-crolls">
+              <h4>🥐 Cinnamon Rolls</h4>
+              <div class="inc-label" style="margin-bottom:.5rem;">Flavor</div>
+              <div class="pill-group" style="margin-bottom:1rem;">
+                <label class="rpill">
+                  <input type="radio" name="crolls-flavor" value="iced" checked onchange="S.crolls.flavor=this.value;updateSummary()">
+                  🥐 Iced Cinnamon Roll
+                </label>
+                <label class="rpill">
+                  <input type="radio" name="crolls-flavor" value="pumpkin" onchange="S.crolls.flavor=this.value;updateSummary()">
+                  🎃 Pumpkin Roll
+                </label>
+              </div>
+              <div class="bqty">
+                <button class="qbtn" onclick="changePackQty('crolls',-1)">−</button>
+                <span class="qdisplay" id="crolls-qty-d">1</span>
+                <button class="qbtn" onclick="changePackQty('crolls',1)">+</button>
+                <span class="qlabel">orders (max 5)</span>
+                <button class="moar-btn" id="crolls-moar" onclick="triggerBulk('crolls')">✦ Need more?</button>
+              </div>
+              <div class="bulk-panel" id="bulk-crolls">
+                <div class="bulk-title">Large Order — Subject to Confirmation</div>
+                <p>How many rolls total? We'll confirm before finalizing.</p>
+                <input type="number" id="bulk-crolls-qty" min="6" max="100" placeholder="e.g. 12" oninput="updateSummary()"/>
+              </div>
+              <div class="inc-label" style="margin-top:.6rem;">Amount per Order</div>
+              <div class="pack-row" id="crolls-packs"></div>
+            </div>
+          </div>
+
           <!-- SANDWICH BREAD -->
           <div class="item-row" id="row-sandwich">
             <div class="item-row-header" onclick="toggleItem('sandwich')">
@@ -1286,14 +1343,14 @@
           <div class="item-row" id="row-seasonal">
             <div class="item-row-header" onclick="toggleItem('seasonal')">
               <div class="item-row-left">
-                <span>🌿</span>
-                <div><div class="item-row-name">Blueberry Lemon Loaf <span style="font-size:.7rem;color:var(--sage);font-family:'Cinzel',serif;letter-spacing:.08em;">SEASONAL</span></div><div class="item-row-price">$14</div></div>
+                <span>🎃</span>
+                <div><div class="item-row-name">Pumpkin Loaf <span style="font-size:.7rem;color:var(--sage);font-family:'Cinzel',serif;letter-spacing:.08em;">SEASONAL</span></div><div class="item-row-price">$12</div></div>
               </div>
               <div class="item-row-toggle" id="tog-seasonal">+</div>
             </div>
             <div class="item-builder" id="builder-seasonal">
-              <h4>🌿 Blueberry Lemon Loaf — Seasonal Special</h4>
-              <p style="font-style:italic;font-size:.88rem;color:var(--muted);margin-bottom:.9rem;">Wild sourdough packed with fresh blueberries and bright lemon zest. $14 per loaf — available while the season lasts.</p>
+              <h4>🎃 Pumpkin Loaf — Seasonal Special</h4>
+              <p style="font-style:italic;font-size:.88rem;color:var(--muted);margin-bottom:.9rem;">Wild sourdough baked with pumpkin and warm fall spices. $12 per loaf — available while the season lasts.</p>
               <div class="bqty">
                 <button class="qbtn" onclick="changeSeasonalQty(-1)">−</button>
                 <span class="qdisplay" id="seasonal-qty-d">1</span>
@@ -1614,14 +1671,15 @@ const S = {
   seasonal: {on:false,qty:1},
   feral:    {on:false,qty:1,style:'seeds'},
   drolls:   {on:false,qty:1,seeds:'seeds',bulk:false},
+  crolls:   {on:false,qty:1,size:'single',flavor:'iced',bulk:false},
   sandwich: {on:false,qty:1,bulk:false},
   pay:null,
   delivery: {selected:false, confirmed:false, address:'', fee:0}
 };
 
 const LP={plain:10,simple:12,premium:14};
-const SF=['Cinnamon Brown Sugar','Cheddar','Everything Bagel','Roasted Garlic Mozzarella'];
-const PF=['Cheddar Jalapeño','Dark Chocolate Croissant Loaf','Strawberry','Cabernet (Wine, Rosemary & Cracked Pepper)','Honey Pistachio','PB&J'];
+const SF=['Cinnamon Brown Sugar','Cheddar','Everything Bagel'];
+const PF=['Maple Nut','Apple Cider','Cheddar Jalapeño','Roasted Garlic Mozzarella','Dark Chocolate Croissant Loaf','Strawberry','Cabernet (Wine, Rosemary & Cracked Pepper)','Honey Pistachio','PB&J'];
 
 function toggleItem(k){
   S[k].on=!S[k].on;
@@ -1641,6 +1699,7 @@ function toggleItem(k){
     if(k==='bagels')  renderPacks('bagels', [{l:'Half Dozen — $12',v:'half',p:12}]);
     if(k==='muffins') renderPacks('muffins',[{l:'Half Dozen — $8', v:'half',p:8}]);
     if(k==='seasonal') showCustomNote();
+    if(k==='crolls') renderPacks('crolls',[{l:'Single — $6',v:'single',p:6},{l:'4-Pack — $20',v:'4pk',p:20}]);
     if(k==='drolls') {};
     if(k==='sandwich') {};
   }
@@ -1734,7 +1793,7 @@ function calcOrder(){
       const bq=parseInt(document.getElementById('bulk-cookies-qty').value)||0;
       if(bq>0){lines.push({label:`Cookies ×${bq} (LARGE — subject to confirmation)`,price:0,bulk:true});hasBulk=true;}
     } else {
-      const p=cookieP[S.cookies.size]||12;const sz=S.cookies.size==='single'?'Single':'Half Dozen';const flv=S.cookies.flavor==='pb'?'Peanut Butter':S.cookies.flavor==='wcmn'?'White Choc Macadamia Nut':S.cookies.flavor==='dbchoc'?'Double Chocolate Chip':S.cookies.flavor==='snick'?'Snickerdoodle':'Chocolate Chip';
+      const p=cookieP[S.cookies.size]||12;const sz=S.cookies.size==='single'?'Single':'Half Dozen';const flv={pb:'Peanut Butter',wcmn:'White Choc Macadamia Nut',dbchoc:'Double Chocolate Chip',snick:'Snickerdoodle',chocpb:'Chocolate Peanut Butter',pumpsnick:'Pumpkin Snickerdoodle',mm:'M&M'}[S.cookies.flavor]||'Chocolate Chip';
       lines.push({label:`${flv} Cookies (${sz}) ×${S.cookies.qty}`,price:p*S.cookies.qty});total+=p*S.cookies.qty;
     }
   }
@@ -1781,6 +1840,17 @@ function calcOrder(){
       lines.push({label:`Dinner Rolls (${seedLabel}) ×${S.drolls.qty} packs of 8`,price:drollPrice*S.drolls.qty});total+=drollPrice*S.drolls.qty;
     }
   }
+  if(S.crolls.on){
+    if(S.crolls.bulk){
+      const bq=parseInt(document.getElementById('bulk-crolls-qty').value)||0;
+      if(bq>0){lines.push({label:`Cinnamon Rolls ×${bq} (LARGE — subject to confirmation)`,price:0,bulk:true});hasBulk=true;}
+    } else {
+      const crP={'single':6,'4pk':20};
+      const p=crP[S.crolls.size]||6;const sz=S.crolls.size==='4pk'?'4-Pack':'Single';
+      const flv=S.crolls.flavor==='pumpkin'?'Pumpkin Roll':'Iced Cinnamon Roll';
+      lines.push({label:`${flv} (${sz}) ×${S.crolls.qty}`,price:p*S.crolls.qty});total+=p*S.crolls.qty;
+    }
+  }
   if(S.feral.on){const feralStyle=S.feral.style==='bare'?'Bare (No Seeds)':'All Natural (With Seeds)';lines.push({label:`Feral Nunn Loaf ×${S.feral.qty} — ${feralStyle}`,price:20*S.feral.qty});total+=20*S.feral.qty;}
   if(S.sandwich.on){
     if(S.sandwich.bulk){
@@ -1788,7 +1858,7 @@ function calcOrder(){
       if(bq>0){lines.push({label:`Soft Sandwich Bread ×${bq} loaves (LARGE — subject to confirmation)`,price:0,bulk:true});hasBulk=true;}
     } else {lines.push({label:`Soft Sandwich Bread ×${S.sandwich.qty} loaves`,price:6*S.sandwich.qty});total+=6*S.sandwich.qty;}
   }
-  if(S.seasonal.on){lines.push({label:`Blueberry Lemon Loaf (Seasonal) ×${S.seasonal.qty}`,price:14*S.seasonal.qty});total+=14*S.seasonal.qty;}
+  if(S.seasonal.on){lines.push({label:`Pumpkin Loaf (Seasonal) ×${S.seasonal.qty}`,price:12*S.seasonal.qty});total+=12*S.seasonal.qty;}
 
   return{lines,total,hasBulk};
 }
